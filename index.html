@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>今日吃甚麼 — 命運大輪盤</title>
 <meta name="description" content="食飯時間唔使諗，撳一下，輪盤幫你揀附近一間餐廳。">
+<meta name="theme-color" content="#FFF8EC">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -100,7 +104,7 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
   .loading-text{text-align:center; font-size:15px; font-weight:500;}
-  .loading-sub{text-align:center; font-size:12.5px; color:var(--muted); margin:6px 0 32px; min-height:18px;}
+  .loading-sub{text-align:center; font-size:12.5px; color:var(--muted); margin:6px 0 24px; min-height:18px;}
 
   .badge{
     display:inline-block; font-size:11.5px; font-weight:700;
@@ -202,6 +206,7 @@
     <div class="spinner"></div>
     <div class="loading-text" id="loading-text">搵緊附近餐廳…</div>
     <div class="loading-sub" id="loading-sub"></div>
+    <button class="btn btn-secondary" id="btn-cancel">取消</button>
   </section>
 
   <!-- 輪盤 -->
@@ -256,16 +261,21 @@
 
 <script>
 /* ============ 設定 ============ */
+// 公共 Overpass 伺服器時快時慢，所以幾個一齊問，邊個最快返就用邊個
 const OVERPASS_ENDPOINTS = [
+  'https://overpass.private.coffee/api/interpreter',
+  'https://overpass.openstreetmap.fr/api/interpreter',
   'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter'
+  'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 ];
-const SEARCH_RADIUS_M   = 1500;            // 一次過攞 1.5 公里，之後喺本機篩
+const FETCH_TIMEOUT_MS  = 20000;           // 最多等幾耐
+const GEO_WATCHDOG_MS   = 15000;           // 定位提示冇人理，等幾耐就放棄
+const CACHE_REUSE_M     = 150;             // 離上次搜尋位置幾近就用返上次清單
 const DIST_STEPS        = [500, 1000, 1500];
 const WHEEL_MAX         = 10;              // 輪盤最多幾間
 const AVOID_REPEAT_DAYS = 2;               // 食過幾多日內唔再抽
 const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位記 30 分鐘
-const PLACES_TTL_MS     = 10 * 60 * 1000;  // 餐廳清單記 10 分鐘
+const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單記 7 日，同一個地方第二次開即刻有
 const WALK_M_PER_MIN    = 75;
 const PALETTE = ['#FF6B4A','#2FB6A5','#8A5A8C','#F2A65A','#5AA9E6','#D9534F','#3C9D6F'];
 
@@ -406,6 +416,7 @@ const store = {
 
 const STEPS = ['start','loading','wheel','result','history'];
 function showStep(name){
+  if(name !== 'loading') stopLoadingClock();
   STEPS.forEach(s => $('step-'+s).classList.toggle('active', s === name));
   window.scrollTo(0,0);
 }
@@ -423,16 +434,33 @@ function setLoading(text, sub){
   $('loading-text').textContent = text;
   $('loading-sub').textContent = sub || '';
 }
+function stopLoadingClock(){ clearInterval(loadClock); loadClock = null; }
+function startLoadingClock(){
+  stopLoadingClock();
+  const t0 = Date.now();
+  loadClock = setInterval(() => {
+    const sec = Math.round((Date.now() - t0) / 1000);
+    if(sec >= 12)     $('loading-sub').textContent = `仲等緊（${sec} 秒）… 最多等 ${FETCH_TIMEOUT_MS/1000} 秒`;
+    else if(sec >= 5) $('loading-sub').textContent = '地圖伺服器有啲慢，等多陣…';
+  }, 1000);
+}
+function cancelRun(){
+  run++;
+  if(runCtrl) runCtrl.abort();
+  stopLoadingClock();
+}
 
 /* ============ 狀態 ============ */
-let prefs = Object.assign({dist:1000, veg:false}, store.get('todayeat_prefs', {}));
-if(!DIST_STEPS.includes(prefs.dist)) prefs.dist = 1000;
+let prefs = Object.assign({dist:500, veg:false}, store.get('todayeat_prefs', {}));
+if(!DIST_STEPS.includes(prefs.dist)) prefs.dist = 500;
 let pool = [];            // 今次搵到嘅全部餐廳
+let poolRadius = 500;     // pool 係搜幾遠攞返嚟
 let isDemo = false;
 let wheel = [];           // 上咗輪盤嗰幾間
 let rejected = new Set(); // 今次話咗唔想食嘅
 let rotation = 0, spinning = false, current = null;
-let memLoc = null, placesCache = null;
+let memLoc = null;
+let run = 0, runCtrl = null, loadClock = null; // 用嚟取消進行中嘅搜尋
 let historyReturn = 'start';
 
 /* ============ 偏好 ============ */
@@ -465,76 +493,130 @@ function getCachedLoc(){
 function locate(){
   return new Promise((resolve, reject) => {
     if(!navigator.geolocation) return reject(new Error('呢個瀏覽器唔支援定位。'));
+    let settled = false;
+    // 定位提示如果冇人答，瀏覽器係唔會自己逾時嘅，所以自己計時
+    const dog = setTimeout(() => {
+      if(settled) return;
+      settled = true;
+      reject(new Error('等咗好耐都攞唔到定位。睇下瀏覽器有冇彈出定位提示，或者喺網址列嘅鎖頭度開返定位權限。'));
+    }, GEO_WATCHDOG_MS);
     navigator.geolocation.getCurrentPosition(
       pos => {
+        if(settled) return;
+        settled = true; clearTimeout(dog);
         const c = {lat:pos.coords.latitude, lng:pos.coords.longitude, ts:Date.now()};
         memLoc = c;
         store.set('todayeat_loc', c);
         resolve(c);
       },
-      err => reject(new Error(err.code === 1
-        ? '你未允許定位。喺瀏覽器網址列嘅鎖頭度開返定位權限，再撳多次。'
-        : '定位逾時或者失敗，試下行近窗邊再撳多次。')),
+      err => {
+        if(settled) return;
+        settled = true; clearTimeout(dog);
+        reject(new Error(err.code === 1
+          ? '你未允許定位。喺瀏覽器網址列嘅鎖頭度開返定位權限，再撳多次。'
+          : '定位逾時或者失敗，試下行近窗邊再撳多次。'));
+      },
       {timeout:10000, maximumAge:60000}
     );
   });
 }
 
 /* ============ 攞餐廳（OpenStreetMap Overpass，唔使 API key） ============ */
-async function fetchPlaces(loc){
-  const q = `[out:json][timeout:20];nwr["amenity"~"^(restaurant|fast_food|food_court)$"]["name"]`
-          + `(around:${SEARCH_RADIUS_M},${loc.lat},${loc.lng});out center tags 300;`;
-  let lastErr;
-  for(const url of OVERPASS_ENDPOINTS){
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 25000);
-    try{
-      const res = await fetch(url, {method:'POST', body:new URLSearchParams({data:q}), signal:ctrl.signal});
+async function fetchPlaces(loc, radius, signal){
+  const q = `[out:json][timeout:15];nwr["amenity"~"^(restaurant|fast_food|food_court)$"]["name"]`
+          + `(around:${radius},${loc.lat},${loc.lng});out center tags;`;
+  const ctrls = OVERPASS_ENDPOINTS.map(() => new AbortController());
+  const abortAll = () => ctrls.forEach(c => c.abort());
+  signal.addEventListener('abort', abortAll);
+  const timer = setTimeout(abortAll, FETCH_TIMEOUT_MS);
+  try{
+    const json = await Promise.any(OVERPASS_ENDPOINTS.map(async (url, i) => {
+      const res = await fetch(url, {method:'POST', body:new URLSearchParams({data:q}), signal:ctrls[i].signal});
       if(!res.ok) throw new Error('HTTP ' + res.status);
-      const json = await res.json();
-      const now = new Date();
-      return (json.elements || []).map(el => toPlace(el, loc, now)).filter(Boolean);
-    }catch(e){
-      lastErr = e;
-    }finally{
-      clearTimeout(timer);
-    }
-  }
-  throw lastErr;
-}
-async function getPlaces(loc){
-  const key = loc.lat.toFixed(4) + ',' + loc.lng.toFixed(4);
-  if(placesCache && placesCache.key === key && Date.now() - placesCache.ts < PLACES_TTL_MS){
-    // 清單可以重用，但營業狀態要按而家時間再計
+      const j = await res.json();
+      if(!Array.isArray(j.elements) || j.remark) throw new Error('incomplete response'); // remark = 伺服器中途出錯
+      return j;
+    }));
     const now = new Date();
-    placesCache.list.forEach(p => { p.open = isOpenAt(p.hours, now); });
-    return placesCache.list;
+    return json.elements.map(el => toPlace(el, loc, now)).filter(Boolean);
+  }finally{
+    clearTimeout(timer);
+    abortAll(); // 停咗其餘仲未返嘅
+    signal.removeEventListener('abort', abortAll);
   }
-  const list = await fetchPlaces(loc);
-  placesCache = {key, ts:Date.now(), list};
-  return list;
+}
+
+/* 餐廳清單存喺本機：同一個地方（例如公司）第二次開唔使再等網絡 */
+function cacheFind(loc, radius, anyAge){
+  return store.get('todayeat_places', []).find(c =>
+    c.r >= radius &&
+    (anyAge || Date.now() - c.ts < PLACES_TTL_MS) &&
+    haversineM(loc.lat, loc.lng, c.lat, c.lng) <= CACHE_REUSE_M) || null;
+}
+function cacheSave(loc, radius, places){
+  const rest = store.get('todayeat_places', []).filter(c =>
+    haversineM(loc.lat, loc.lng, c.lat, c.lng) > CACHE_REUSE_M || c.r > radius);
+  rest.unshift({lat:loc.lat, lng:loc.lng, r:radius, ts:Date.now(), places});
+  store.set('todayeat_places', rest.slice(0, 4));
+}
+function fromCache(c, loc, radius){
+  const now = new Date(); // 距離同營業狀態按而家再計
+  return c.places.map(p => Object.assign({}, p, {
+    distanceM: haversineM(loc.lat, loc.lng, p.lat, p.lng),
+    open: isOpenAt(p.hours, now)
+  })).filter(p => p.distanceM <= radius);
+}
+async function getPlaces(loc, radius, signal){
+  const hit = cacheFind(loc, radius, false);
+  if(hit) return fromCache(hit, loc, radius);
+  try{
+    const places = await fetchPlaces(loc, radius, signal);
+    cacheSave(loc, radius, places);
+    return places;
+  }catch(e){
+    const stale = signal.aborted ? null : cacheFind(loc, radius, true); // 網絡唔得就用舊清單頂住
+    if(stale) return fromCache(stale, loc, radius);
+    throw e;
+  }
 }
 
 /* ============ 主流程：撳一下 → 定位 → 搵餐廳 → 自動轉 ============ */
 async function go(refreshLoc){
   clearError();
+  cancelRun();
+  const my = run;
+  runCtrl = new AbortController();
+  const signal = runCtrl.signal;
   showStep('loading');
   let loc = refreshLoc ? null : getCachedLoc();
   if(!loc){
     setLoading('搵緊你喺邊度…', '請喺瀏覽器彈出嘅視窗允許定位');
     try{ loc = await locate(); }
-    catch(e){ return showError(e.message, true); }
+    catch(e){ if(my === run) showError(e.message, true); return; }
+    if(my !== run) return; // 中途撳咗取消
   }
   setLoading('搵緊附近餐廳…', '通常幾秒就得');
-  try{ pool = await getPlaces(loc); }
-  catch(e){ return showError('暫時攞唔到餐廳資料（網絡問題或者伺服器忙緊），等一陣再試。', true); }
+  startLoadingClock();
+  try{
+    // 先搜揀咗嘅距離；唔夠 3 間先至搜遠啲
+    for(const d of DIST_STEPS.filter(x => x >= prefs.dist)){
+      const places = await getPlaces(loc, d, signal);
+      if(my !== run) return;
+      pool = places; poolRadius = d;
+      if(eligible(d, false, true).length >= 3) break;
+    }
+  }catch(e){
+    if(my === run) showError('地圖伺服器而家冇回應（佢哋係免費公共服務，有時好忙）。等一陣再試。', true);
+    return;
+  }
   if(!pool.length) return showError('1.5 公里內搵唔到餐廳資料，呢區嘅地圖資料可能未齊。', true);
   isDemo = false;
   startWheel();
 }
 function goDemo(){
   clearError();
-  pool = DEMO_PLACES;
+  cancelRun();
+  pool = DEMO_PLACES; poolRadius = 1500;
   isDemo = true;
   startWheel();
 }
@@ -554,6 +636,7 @@ function showWheelAndSpin(){
 $('btn-go').addEventListener('click', () => go(false));
 $('btn-refresh-loc').addEventListener('click', () => go(true));
 $('btn-demo').addEventListener('click', goDemo);
+$('btn-cancel').addEventListener('click', () => { cancelRun(); renderPrefs(); showStep('start'); });
 $('btn-back-start').addEventListener('click', () => { if(!spinning){ clearError(); renderPrefs(); showStep('start'); } });
 
 /* ============ 揀邊幾間上輪盤 ============ */
@@ -571,7 +654,7 @@ function eligible(dist, skipRejected, skipRecent){
     !recent.has(p.id));
 }
 function buildWheel(){
-  const dists = DIST_STEPS.filter(d => d >= prefs.dist);
+  const dists = [poolRadius];
   // 逐步放寬：先全部條件 → 唔理「今次唔想食」→ 連「呢兩日食過」都唔理
   const passes = [[true,true],[false,true],[false,false]];
   for(const [skipRejected, skipRecent] of passes){
@@ -584,8 +667,7 @@ function buildWheel(){
         let note = list.length > wheel.length
           ? `附近有 ${list.length} 間啱，隨機抽 ${wheel.length} 間上輪盤`
           : `附近有 ${list.length} 間啱，全部上晒輪盤`;
-        const widened = list.length > eligible(prefs.dist, skipRejected, skipRecent).length;
-        if(widened) note += `（${prefs.dist} 米內唔夠揀，擴到 ${dists[i]} 米）`;
+        if(!isDemo && poolRadius > prefs.dist) note += `（${prefs.dist} 米內唔夠揀，擴到 ${dists[i]} 米）`;
         $('wheel-note').textContent = note;
         drawWheel();
         return true;

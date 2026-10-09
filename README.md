@@ -14,6 +14,12 @@
 
 餐廳資料嚟自 [OpenStreetMap](https://www.openstreetmap.org/)，經 Overpass API 查詢，**唔使 API key、冇收費**。
 
+公共 Overpass 伺服器係免費服務，有時好慢甚至冇回應，所以：
+
+- 同時問幾個伺服器，用最快返嗰個，最多等 20 秒，載入中可以取消
+- 搵到嘅餐廳清單會存喺瀏覽器 7 日。喺同一個地方（例如公司）第二次開唔使再等網絡
+- 伺服器全部唔得而又有舊清單，就用舊清單頂住
+
 限制：
 
 - 餐廳齊唔齊視乎該區有冇人喺 OSM 標記
@@ -22,8 +28,8 @@
 
 ## 部署
 
-純靜態單檔。GitHub repo → Settings → Pages → 揀 `main` branch 就得。
+純靜態，冇 build step：`index.html` 加三個 icon 檔（`favicon.svg`、`favicon.ico`、`apple-touch-icon.png`）。GitHub repo → Settings → Pages → 揀 `main` branch 就得。
 
 ## 可以改嘅設定
 
-`index.html` 嘅 `<script>` 頂部：`WHEEL_MAX`（輪盤幾多間）、`AVOID_REPEAT_DAYS`（幾多日唔重複）、`DIST_STEPS`（距離選項）。
+`index.html` 嘅 `<script>` 頂部：`WHEEL_MAX`（輪盤幾多間）、`AVOID_REPEAT_DAYS`（幾多日唔重複）、`DIST_STEPS`（距離選項）、`OVERPASS_ENDPOINTS`（地圖伺服器清單）。
