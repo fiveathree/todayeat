@@ -257,6 +257,7 @@
     margin-bottom:6px; overflow-wrap:anywhere;
   }
   .result-meta{text-align:center; font-size:14px; margin-bottom:6px;}
+  .result-widen{text-align:center; font-size:12.5px; color:#8A6300; background:#FFF3D6; border-radius:10px; padding:5px 10px; margin:4px 0;}
   .result-status{text-align:center; font-size:13px; margin-bottom:4px;}
   .result-detail{text-align:center; font-size:12.5px; color:var(--muted); line-height:1.6; overflow-wrap:anywhere;}
   .result-map{
@@ -422,6 +423,7 @@
     <div class="result-name" id="result-name"></div>
     <div class="result-meta" id="result-meta"></div>
     <div class="result-status" id="result-status"></div>
+    <div class="result-widen" id="result-widen" hidden></div>
     <div class="result-detail" id="result-detail"></div>
     <div class="result-map" id="result-map"></div>
 
@@ -634,7 +636,7 @@ const I18N = {
     noFilterMatch:'附近沒有符合「更多選項」條件的餐廳，放寬條件再試試。',
     noVeg:'附近找不到標明素食的餐廳，試試關掉「只要素食」。', noOpen:'附近找不到目前有營業的餐廳。',
     noteSome:(n, k) => `附近 ${n} 間符合，這一輪隨機抽 ${k} 間\n每次再轉都會換一批`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
-    noteWiden:(a, b) => `（${a}內沒有，擴大到 ${b}）`,
+    noteWiden:(a, b) => `⚠️ ${a} 分鐘內沒有，已放寬到 ${b} 分鐘內`,
     fewNote:min => `距離只設了 ${min} 分鐘，所以選擇很少。`, fewWiden:min => `改成 ${min} 分鐘再找`,
     spin:'🎯 轉！', resultLabel:'命運告訴你，這餐吃：', takeMe:'🚶 就吃這間，帶我去', reject:'🎲 不想吃這間，再轉',
     call:n => `📞 打電話問問（${n}）`, reviews:'⭐ 看 Google 評價和照片',
@@ -682,7 +684,7 @@ const I18N = {
     noFilterMatch:'Nothing nearby matches your “More options”. Try loosening them.',
     noVeg:'No restaurants marked vegetarian nearby. Try turning off “Vegetarian only”.', noOpen:'No restaurants open nearby right now.',
     noteSome:(n, k) => `${n} places match nearby. This round: ${k} picked at random\nEvery re-spin draws a new set`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
-    noteWiden:(a, b) => ` (none within ${a}, widened to ${b})`,
+    noteWiden:(a, b) => `⚠️ Nothing within ${a} min, so widened to ${b} min`,
     fewNote:min => `Your walking distance is only ${min} min, so there are few choices.`, fewWiden:min => `Search within ${min} min instead`,
     spin:'🎯 Spin!', resultLabel:'Fate says you’re eating at:', takeMe:'🚶 Let’s go, take me there', reject:'🎲 Not this one, spin again',
     call:n => `📞 Call to check (${n})`, reviews:'⭐ Google reviews & photos',
@@ -1524,14 +1526,22 @@ async function go(){
   setLoading(t('searching'), t('searchingSub'));
   startLoadingClock();
   try{
-    // 先看選定的距離；完全沒有可選的才逐步放遠
+    // 先看選定的距離。完全沒有可選的才放寬，而且只放寬到「剛好有幾間可以選」為止，
+    // 不會一下子跳到很遠（之前選 1 分鐘會直接變成 500 公尺內隨機抽）
     const want = walkRadius(prefs.min);
-    for(const d of [want, ...FETCH_BUCKETS.filter(b => b > want)]){
-      const places = await getPlaces(loc, FETCH_BUCKETS.find(b => b >= d), signal);
+    for(const b of FETCH_BUCKETS.filter(x => x >= want)){
+      const places = await getPlaces(loc, b, signal);
       if(my !== run) return;
-      pool = places.filter(p => p.distanceM <= d); poolRadius = d;
-      if(eligible(d, false, false).length) break;
+      pool = places; poolRadius = want;
+      if(eligible(want, false, false).length) break;       // 選定的距離內就有
+      poolRadius = b;
+      if(!eligible(b, false, false).length) continue;      // 這一圈也沒有，再往外查
+      let m = prefs.min + 1;                               // 一分鐘一分鐘加，湊到 3 間就停
+      while(walkRadius(m) < b && eligible(walkRadius(m), false, false).length < 3) m++;
+      poolRadius = Math.min(b, walkRadius(m));
+      break;
     }
+    pool = pool.filter(p => p.distanceM <= poolRadius);
   }catch(e){
     if(my === run) showError(t('serverDown'));
     return;
@@ -1575,10 +1585,10 @@ function buildWheel(){
     if(!skipRejected) rejected.clear();
     wheel = shuffle(list).slice(0, WHEEL_MAX);
     let note = list.length > wheel.length ? t('noteSome', list.length, wheel.length) : t('noteAll', list.length);
-    if(poolRadius > walkRadius(prefs.min)) note += t('noteWiden', fmtDist(walkRadius(prefs.min)), fmtDist(poolRadius));
+    if(poolRadius > walkRadius(prefs.min)) note += '\n' + t('noteWiden', prefs.min, Math.round(poolRadius / WALK_M_PER_MIN));
     $('wheel-note').textContent = note;
     // 距離設得很近、選擇又很少時，提醒可以拉遠（常見情況：拉桿停在 1 分鐘）
-    const few = list.length < 3 && prefs.min < DEFAULT_MIN;
+    const few = list.length < 3 && prefs.min < DEFAULT_MIN && poolRadius <= walkRadius(prefs.min);
     $('few-note').hidden = !few;
     if(few){
       $('few-note-text').textContent = t('fewNote', prefs.min);
@@ -1679,6 +1689,9 @@ function showResult(p){
   $('result-meta').textContent = [cuisineText(p), dist, t('walk', walkMin)].filter(Boolean).join(t('sep'));
 
   $('result-status').textContent = p.open === true ? t('openNow') : t('openUnknown');
+  const widened = poolRadius > walkRadius(prefs.min); // 結果比選的距離遠時，在結果頁也講清楚
+  $('result-widen').hidden = !widened;
+  if(widened) $('result-widen').textContent = t('noteWiden', prefs.min, Math.round(poolRadius / WALK_M_PER_MIN));
   $('result-detail').textContent = [p.address, p.hours ? t('hours', p.hours) : ''].filter(Boolean).join('\n');
   $('result-detail').style.whiteSpace = 'pre-line';
 
