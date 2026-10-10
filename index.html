@@ -294,6 +294,7 @@
     .prefs{margin-top:10px; padding-top:10px;}
     .walk-icons{height:68px; margin-bottom:6px;}
     .wheel-stage{transform:scale(0.84); margin:-14px auto 0;}
+    #few-note{margin-bottom:0; padding:6px 10px;}
     .result-name{font-size:25px;}
     .result-map{height:60px; margin:8px 0;}
     .toast{min-height:0; margin:2px 0 0;}
@@ -406,6 +407,7 @@
   <!-- 輪盤 -->
   <section class="step" id="step-wheel">
     <div class="wheel-note" id="wheel-note"></div>
+    <div class="place-note" id="few-note" hidden><span id="few-note-text"></span> <button class="link" id="btn-widen"></button></div>
     <div class="wheel-stage">
       <div class="pointer"></div>
       <div class="wheel-dial" id="wheel-dial"><canvas id="wheel-canvas"></canvas></div>
@@ -633,6 +635,7 @@ const I18N = {
     noVeg:'附近找不到標明素食的餐廳，試試關掉「只要素食」。', noOpen:'附近找不到目前有營業的餐廳。',
     noteSome:(n, k) => `附近 ${n} 間符合，這一輪隨機抽 ${k} 間\n每次再轉都會換一批`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
     noteWiden:(a, b) => `（${a}內沒有，擴大到 ${b}）`,
+    fewNote:min => `距離只設了 ${min} 分鐘，所以選擇很少。`, fewWiden:min => `改成 ${min} 分鐘再找`,
     spin:'🎯 轉！', resultLabel:'命運告訴你，這餐吃：', takeMe:'🚶 就吃這間，帶我去', reject:'🎲 不想吃這間，再轉',
     call:n => `📞 打電話問問（${n}）`, reviews:'⭐ 看 Google 評價和照片',
     walk:min => `步行約 ${min} 分鐘`, fromPlace:(n, d) => `距${n} ${d}`,
@@ -680,6 +683,7 @@ const I18N = {
     noVeg:'No restaurants marked vegetarian nearby. Try turning off “Vegetarian only”.', noOpen:'No restaurants open nearby right now.',
     noteSome:(n, k) => `${n} places match nearby. This round: ${k} picked at random\nEvery re-spin draws a new set`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
     noteWiden:(a, b) => ` (none within ${a}, widened to ${b})`,
+    fewNote:min => `Your walking distance is only ${min} min, so there are few choices.`, fewWiden:min => `Search within ${min} min instead`,
     spin:'🎯 Spin!', resultLabel:'Fate says you’re eating at:', takeMe:'🚶 Let’s go, take me there', reject:'🎲 Not this one, spin again',
     call:n => `📞 Call to check (${n})`, reviews:'⭐ Google reviews & photos',
     walk:min => `about ${min} min walk`, fromPlace:(n, d) => `${d} from ${n}`,
@@ -1546,6 +1550,7 @@ function showWheelAndSpin(){
   setTimeout(() => { if(token === spinToken) spin(); }, 450); // 等畫面出現後再轉
 }
 $('btn-go').addEventListener('click', go);
+$('btn-widen').addEventListener('click', () => { spinToken++; spinning = false; $('btn-spin').disabled = false; setWalk(DEFAULT_MIN, true); go(); });
 
 /* ============ 決定哪幾間上輪盤 ============ */
 function recentIds(){
@@ -1572,6 +1577,13 @@ function buildWheel(){
     let note = list.length > wheel.length ? t('noteSome', list.length, wheel.length) : t('noteAll', list.length);
     if(poolRadius > walkRadius(prefs.min)) note += t('noteWiden', fmtDist(walkRadius(prefs.min)), fmtDist(poolRadius));
     $('wheel-note').textContent = note;
+    // 距離設得很近、選擇又很少時，提醒可以拉遠（常見情況：拉桿停在 1 分鐘）
+    const few = list.length < 3 && prefs.min < DEFAULT_MIN;
+    $('few-note').hidden = !few;
+    if(few){
+      $('few-note-text').textContent = t('fewNote', prefs.min);
+      $('btn-widen').textContent = t('fewWiden', DEFAULT_MIN);
+    }
     drawWheel();
     return true;
   }
