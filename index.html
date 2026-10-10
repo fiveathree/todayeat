@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>今日吃甚麼 — 命運大輪盤</title>
-<meta name="description" content="食飯時間唔使諗，撳一下，輪盤幫你揀附近一間餐廳。">
+<meta name="description" content="吃飯時間不用想，按一下，輪盤幫你挑一間附近的餐廳。">
 <meta name="theme-color" content="#FFF8EC">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -176,16 +176,16 @@
   <!-- 開始 -->
   <section class="step active" id="step-start">
     <h1>今日吃甚麼</h1>
-    <p class="subtitle">食飯時間唔使諗，撳一下就有答案</p>
+    <p class="subtitle">吃飯時間不用想，按一下就有答案</p>
     <div class="icon-row" aria-hidden="true">🍜🎡🥡</div>
     <div class="error-box" id="error-box" role="alert"></div>
-    <button class="btn btn-primary" id="btn-go">🎯 幫我揀今餐食咩</button>
+    <button class="btn btn-primary" id="btn-go">🎯 幫我選這餐吃什麼</button>
     <button class="btn btn-secondary" id="btn-demo" hidden>🧪 用示範資料試玩</button>
 
     <div class="prefs">
-      <div class="pref-label">📍 最遠肯行幾遠？</div>
+      <div class="pref-label">📍 最遠願意走多遠？</div>
       <div class="chips" id="dist-chips">
-        <button class="chip" data-dist="500">約 7 分鐘（500 米）</button>
+        <button class="chip" data-dist="500">約 7 分鐘（500 公尺）</button>
         <button class="chip" data-dist="1000">約 13 分鐘（1 公里）</button>
         <button class="chip" data-dist="1500">約 20 分鐘（1.5 公里）</button>
       </div>
@@ -193,25 +193,25 @@
         <button class="chip" id="chip-veg" aria-pressed="false">🥬 只要素食</button>
       </div>
     </div>
-    <p class="hint" style="margin-top:16px;">偏好會記住，下次開嚟直接撳就得。</p>
+    <p class="hint" style="margin-top:16px;">偏好會記住，下次打開直接按就好。</p>
 
     <div class="link-row">
-      <button class="link" id="btn-history-start">📜 食過嘅紀錄</button>
-      <button class="link" id="btn-refresh-loc" hidden>📍 我換咗地方，重新定位</button>
+      <button class="link" id="btn-history-start">📜 吃過的紀錄</button>
+      <button class="link" id="btn-refresh-loc" hidden>📍 我換了地方，重新定位</button>
     </div>
   </section>
 
   <!-- 載入 -->
   <section class="step" id="step-loading" aria-live="polite">
     <div class="spinner"></div>
-    <div class="loading-text" id="loading-text">搵緊附近餐廳…</div>
+    <div class="loading-text" id="loading-text">正在找附近的餐廳…</div>
     <div class="loading-sub" id="loading-sub"></div>
     <button class="btn btn-secondary" id="btn-cancel">取消</button>
   </section>
 
   <!-- 輪盤 -->
   <section class="step" id="step-wheel">
-    <div class="badge-wrap" id="demo-badge-wheel" hidden><span class="badge">示範資料・唔係真餐廳</span></div>
+    <div class="badge-wrap" id="demo-badge-wheel" hidden><span class="badge">示範資料・不是真的餐廳</span></div>
     <div class="wheel-note" id="wheel-note"></div>
     <div class="wheel-stage">
       <div class="pointer"></div>
@@ -220,86 +220,86 @@
     </div>
     <button class="btn btn-primary" id="btn-spin">🎯 轉！</button>
     <div class="link-row">
-      <button class="link" id="btn-back-start">⚙️ 改偏好</button>
+      <button class="link" id="btn-back-start">⚙️ 修改偏好</button>
     </div>
   </section>
 
   <!-- 結果 -->
   <section class="step" id="step-result">
-    <div class="badge-wrap" id="demo-badge-result" hidden><span class="badge">示範資料・唔係真餐廳</span></div>
-    <div class="result-label">命運話你知，今餐食：</div>
+    <div class="badge-wrap" id="demo-badge-result" hidden><span class="badge">示範資料・不是真的餐廳</span></div>
+    <div class="result-label">命運告訴你，這餐吃：</div>
     <div class="result-name" id="result-name"></div>
     <div class="result-meta" id="result-meta"></div>
     <div class="result-status" id="result-status"></div>
     <div class="result-detail" id="result-detail"></div>
     <div class="result-map" id="result-map"></div>
 
-    <a class="btn btn-go" id="btn-navigate" target="_blank" rel="noopener">🚶 就食呢間，帶我去</a>
-    <button class="btn btn-primary" id="btn-reject">🎲 唔想食呢間，再轉</button>
-    <a class="btn btn-secondary" id="btn-phone">📞 打去問下</a>
+    <a class="btn btn-go" id="btn-navigate" target="_blank" rel="noopener">🚶 就吃這間，帶我去</a>
+    <button class="btn btn-primary" id="btn-reject">🎲 不想吃這間，再轉</button>
+    <a class="btn btn-secondary" id="btn-phone">📞 打電話問問</a>
     <div class="toast" id="toast" aria-live="polite"></div>
     <div class="link-row" style="margin-top:8px;">
-      <a class="link" id="link-reviews" target="_blank" rel="noopener">⭐ 睇 Google 評價同相</a>
-      <button class="link" id="btn-history-result">📜 食過嘅紀錄</button>
+      <a class="link" id="link-reviews" target="_blank" rel="noopener">⭐ 看 Google 評價和照片</a>
+      <button class="link" id="btn-history-result">📜 吃過的紀錄</button>
     </div>
   </section>
 
   <!-- 紀錄 -->
   <section class="step" id="step-history">
-    <div class="section-title">📜 食過嘅紀錄</div>
-    <p class="hint" style="margin-bottom:18px;">撳過「就食呢間」先會記低。呢 2 日食過嘅唔會再抽到。</p>
+    <div class="section-title">📜 吃過的紀錄</div>
+    <p class="hint" style="margin-bottom:18px;">按過「就吃這間」才會記錄。這 2 天吃過的不會再抽到。</p>
     <div id="history-list"></div>
-    <button class="btn btn-primary" id="btn-history-back">返去</button>
+    <button class="btn btn-primary" id="btn-history-back">返回</button>
     <button class="btn btn-secondary" id="btn-history-clear">🗑️ 清除紀錄</button>
   </section>
 
   <div class="footer">
     餐廳資料 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者<br>
-    你嘅位置只會留喺呢部機，同埋用嚟查附近餐廳
+    你的位置只會留在這台裝置，並用來查詢附近餐廳
   </div>
 </main>
 
 <script>
 /* ============ 設定 ============ */
-// 公共 Overpass 伺服器時快時慢，所以幾個一齊問，邊個最快返就用邊個
+// 公共 Overpass 伺服器時快時慢，所以同時問幾個，誰最快回應就用誰
 const OVERPASS_ENDPOINTS = [
   'https://overpass.private.coffee/api/interpreter',
   'https://overpass.openstreetmap.fr/api/interpreter',
   'https://overpass-api.de/api/interpreter',
   'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 ];
-const FETCH_TIMEOUT_MS  = 20000;           // 最多等幾耐
-const GEO_WATCHDOG_MS   = 15000;           // 定位提示冇人理，等幾耐就放棄
-const CACHE_REUSE_M     = 150;             // 離上次搜尋位置幾近就用返上次清單
+const FETCH_TIMEOUT_MS  = 20000;           // 最多等多久
+const GEO_WATCHDOG_MS   = 15000;           // 定位提示沒人回應時，等多久就放棄
+const CACHE_REUSE_M     = 150;             // 離上次搜尋位置多近就沿用上次的清單
 const DIST_STEPS        = [500, 1000, 1500];
-const WHEEL_MAX         = 10;              // 輪盤最多幾間
-const AVOID_REPEAT_DAYS = 2;               // 食過幾多日內唔再抽
-const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位記 30 分鐘
-const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單記 7 日，同一個地方第二次開即刻有
+const WHEEL_MAX         = 10;              // 輪盤最多放幾間
+const AVOID_REPEAT_DAYS = 2;               // 吃過之後幾天內不再抽到
+const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位保留 30 分鐘
+const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單保留 7 天，同一個地方第二次打開立刻有結果
 const WALK_M_PER_MIN    = 75;
 const PALETTE = ['#FF6B4A','#2FB6A5','#8A5A8C','#F2A65A','#5AA9E6','#D9534F','#3C9D6F'];
 
 const CUISINE_ZH = {
   chinese:'中式', taiwanese:'台式', japanese:'日式', korean:'韓式', thai:'泰式', vietnamese:'越式',
-  asian:'亞洲菜', western:'西式', italian:'意式', american:'美式', french:'法式', indian:'印度菜',
+  asian:'亞洲菜', western:'西式', italian:'義式', american:'美式', french:'法式', indian:'印度菜',
   mexican:'墨西哥菜', noodle:'麵食', noodles:'麵食', ramen:'拉麵', beef_noodle:'牛肉麵', sushi:'壽司',
-  hotpot:'火鍋', hot_pot:'火鍋', burger:'漢堡', pizza:'薄餅', pasta:'意粉', dumpling:'餃子',
+  hotpot:'火鍋', hot_pot:'火鍋', burger:'漢堡', pizza:'披薩', pasta:'義大利麵', dumpling:'餃子',
   dumplings:'餃子', bbq:'燒烤', barbecue:'燒烤', seafood:'海鮮', chicken:'炸雞', fried_chicken:'炸雞',
-  sandwich:'三文治', steak_house:'牛扒', steak:'牛扒', curry:'咖喱', rice:'飯類', breakfast:'早餐',
-  brunch:'早午餐', teppanyaki:'鐵板燒', vegetarian:'素食', vegan:'純素', dessert:'甜品',
+  sandwich:'三明治', steak_house:'牛排', steak:'牛排', curry:'咖哩', rice:'飯類', breakfast:'早餐',
+  brunch:'早午餐', teppanyaki:'鐵板燒', vegetarian:'素食', vegan:'純素', dessert:'甜點',
   coffee_shop:'咖啡', regional:'地方菜', soup:'湯品', porridge:'粥', bento:'便當', buffet:'自助餐'
 };
 
 const DEMO_PLACES = [
-  ['阿婆牛雜','中式',350],['深夜拉麵屋','日式',620],['早晨茶記','中式',180],['車仔麵檔','麵食',410],
-  ['廿四小時粥店','粥',500],['街角小酒館','西式',900],['阿榮燒臘','中式',270],['大排檔火鍋','火鍋',760],
+  ['阿婆牛肉麵','中式',350],['深夜拉麵屋','日式',620],['早安豆漿店','中式',180],['巷口麵攤','麵食',410],
+  ['二十四小時粥店','粥',500],['街角小酒館','西式',900],['阿榮便當','中式',270],['老街火鍋','火鍋',760],
   ['素食輕食坊','素食',200]
 ].map(([name,cuisine,distanceM],i) => ({
   id:'demo'+i, name, cuisine, distanceM, veg:cuisine==='素食',
   open:true, hours:'', address:'', phone:'', lat:null, lng:null
 }));
 
-/* PURE-START —— 以下係純函數，冇掂 DOM */
+/* PURE-START —— 以下是純函式，不碰 DOM */
 const DAY_KEYS = ['su','mo','tu','we','th','fr','sa'];
 
 function parseDays(part){
@@ -308,7 +308,7 @@ function parseDays(part){
   for(const tok of part.split(',')){
     const t = tok.trim();
     if(!t) continue;
-    if(t === 'ph' || t === 'sh') continue; // 公眾假期／學校假期規則唔理
+    if(t === 'ph' || t === 'sh') continue; // 國定假日／學校假期的規則略過
     const m = t.match(/^(mo|tu|we|th|fr|sa|su)(?:\s*-\s*(mo|tu|we|th|fr|sa|su))?$/);
     if(!m) return null;
     const a = DAY_KEYS.indexOf(m[1]);
@@ -333,7 +333,7 @@ function parseTimes(part){
   return out;
 }
 
-// 解讀 OSM opening_hours 常見寫法。回 true／false；睇唔明或者冇資料回 null。
+// 解讀 OSM opening_hours 的常見寫法。回傳 true／false；看不懂或沒有資料則回傳 null。
 function isOpenAt(str, now){
   if(!str) return null;
   const s = String(str).trim().toLowerCase();
@@ -351,7 +351,7 @@ function isOpenAt(str, now){
     if(!days || !times) return null;
     if(!days.size) continue;
     any = true;
-    if(days.has(today)) todayRanges = times; // 後面嘅規則蓋過前面
+    if(days.has(today)) todayRanges = times; // 後面的規則覆蓋前面的
     if(days.has(yday))  ydayRanges  = times;
   }
   if(!any) return null;
@@ -371,7 +371,7 @@ function cuisineLabel(tags){
   const raw = (tags.cuisine || '').toLowerCase().split(/[;,]/).map(x => x.trim()).filter(Boolean);
   const labels = [...new Set(raw.map(x => CUISINE_ZH[x] || x.replace(/_/g,' ')))].slice(0,2);
   if(labels.length) return labels.join('・');
-  if(tags.amenity === 'fast_food') return '快餐';
+  if(tags.amenity === 'fast_food') return '速食';
   if(tags.amenity === 'food_court') return '美食廣場';
   return '';
 }
@@ -411,7 +411,7 @@ function shuffle(arr){
 const $ = id => document.getElementById(id);
 const store = {
   get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
-  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* 私隱模式等情況寫唔到，當冇事 */ } }
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* 無痕模式等情況寫不進去，直接略過 */ } }
 };
 
 const STEPS = ['start','loading','wheel','result','history'];
@@ -440,8 +440,8 @@ function startLoadingClock(){
   const t0 = Date.now();
   loadClock = setInterval(() => {
     const sec = Math.round((Date.now() - t0) / 1000);
-    if(sec >= 12)     $('loading-sub').textContent = `仲等緊（${sec} 秒）… 最多等 ${FETCH_TIMEOUT_MS/1000} 秒`;
-    else if(sec >= 5) $('loading-sub').textContent = '地圖伺服器有啲慢，等多陣…';
+    if(sec >= 12)     $('loading-sub').textContent = `還在等（${sec} 秒）… 最多等 ${FETCH_TIMEOUT_MS/1000} 秒`;
+    else if(sec >= 5) $('loading-sub').textContent = '地圖伺服器有點慢，再等一下…';
   }, 1000);
 }
 function cancelRun(){
@@ -453,14 +453,14 @@ function cancelRun(){
 /* ============ 狀態 ============ */
 let prefs = Object.assign({dist:500, veg:false}, store.get('todayeat_prefs', {}));
 if(!DIST_STEPS.includes(prefs.dist)) prefs.dist = 500;
-let pool = [];            // 今次搵到嘅全部餐廳
-let poolRadius = 500;     // pool 係搜幾遠攞返嚟
+let pool = [];            // 這次找到的全部餐廳
+let poolRadius = 500;     // pool 是搜尋多遠取得的
 let isDemo = false;
-let wheel = [];           // 上咗輪盤嗰幾間
-let rejected = new Set(); // 今次話咗唔想食嘅
+let wheel = [];           // 放上輪盤的那幾間
+let rejected = new Set(); // 這次已經說不想吃的
 let rotation = 0, spinning = false, current = null;
 let memLoc = null;
-let run = 0, runCtrl = null, loadClock = null; // 用嚟取消進行中嘅搜尋
+let run = 0, runCtrl = null, loadClock = null; // 用來取消進行中的搜尋
 let historyReturn = 'start';
 
 /* ============ 偏好 ============ */
@@ -492,13 +492,13 @@ function getCachedLoc(){
 }
 function locate(){
   return new Promise((resolve, reject) => {
-    if(!navigator.geolocation) return reject(new Error('呢個瀏覽器唔支援定位。'));
+    if(!navigator.geolocation) return reject(new Error('這個瀏覽器不支援定位。'));
     let settled = false;
-    // 定位提示如果冇人答，瀏覽器係唔會自己逾時嘅，所以自己計時
+    // 定位提示如果沒人回應，瀏覽器不會自己逾時，所以自己計時
     const dog = setTimeout(() => {
       if(settled) return;
       settled = true;
-      reject(new Error('等咗好耐都攞唔到定位。睇下瀏覽器有冇彈出定位提示，或者喺網址列嘅鎖頭度開返定位權限。'));
+      reject(new Error('等了很久還是取不到定位。請看看瀏覽器有沒有跳出定位提示，或到網址列的鎖頭圖示重新開啟定位權限。'));
     }, GEO_WATCHDOG_MS);
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -513,15 +513,15 @@ function locate(){
         if(settled) return;
         settled = true; clearTimeout(dog);
         reject(new Error(err.code === 1
-          ? '你未允許定位。喺瀏覽器網址列嘅鎖頭度開返定位權限，再撳多次。'
-          : '定位逾時或者失敗，試下行近窗邊再撳多次。'));
+          ? '你還沒允許定位。請到網址列的鎖頭圖示開啟定位權限，再按一次。'
+          : '定位逾時或失敗，試著靠近窗邊再按一次。'));
       },
       {timeout:10000, maximumAge:60000}
     );
   });
 }
 
-/* ============ 攞餐廳（OpenStreetMap Overpass，唔使 API key） ============ */
+/* ============ 取得餐廳（OpenStreetMap Overpass，不需要 API key） ============ */
 async function fetchPlaces(loc, radius, signal){
   const q = `[out:json][timeout:15];nwr["amenity"~"^(restaurant|fast_food|food_court)$"]["name"]`
           + `(around:${radius},${loc.lat},${loc.lng});out center tags;`;
@@ -541,12 +541,12 @@ async function fetchPlaces(loc, radius, signal){
     return json.elements.map(el => toPlace(el, loc, now)).filter(Boolean);
   }finally{
     clearTimeout(timer);
-    abortAll(); // 停咗其餘仲未返嘅
+    abortAll(); // 中止其餘還沒回應的
     signal.removeEventListener('abort', abortAll);
   }
 }
 
-/* 餐廳清單存喺本機：同一個地方（例如公司）第二次開唔使再等網絡 */
+/* 餐廳清單存在本機：同一個地方（例如公司）第二次打開不用再等網路 */
 function cacheFind(loc, radius, anyAge){
   return store.get('todayeat_places', []).find(c =>
     c.r >= radius &&
@@ -560,7 +560,7 @@ function cacheSave(loc, radius, places){
   store.set('todayeat_places', rest.slice(0, 4));
 }
 function fromCache(c, loc, radius){
-  const now = new Date(); // 距離同營業狀態按而家再計
+  const now = new Date(); // 距離和營業狀態依現在的時間重新計算
   return c.places.map(p => Object.assign({}, p, {
     distanceM: haversineM(loc.lat, loc.lng, p.lat, p.lng),
     open: isOpenAt(p.hours, now)
@@ -574,13 +574,13 @@ async function getPlaces(loc, radius, signal){
     cacheSave(loc, radius, places);
     return places;
   }catch(e){
-    const stale = signal.aborted ? null : cacheFind(loc, radius, true); // 網絡唔得就用舊清單頂住
+    const stale = signal.aborted ? null : cacheFind(loc, radius, true); // 網路不通就先用舊清單
     if(stale) return fromCache(stale, loc, radius);
     throw e;
   }
 }
 
-/* ============ 主流程：撳一下 → 定位 → 搵餐廳 → 自動轉 ============ */
+/* ============ 主流程：按一下 → 定位 → 找餐廳 → 自動轉 ============ */
 async function go(refreshLoc){
   clearError();
   cancelRun();
@@ -590,15 +590,15 @@ async function go(refreshLoc){
   showStep('loading');
   let loc = refreshLoc ? null : getCachedLoc();
   if(!loc){
-    setLoading('搵緊你喺邊度…', '請喺瀏覽器彈出嘅視窗允許定位');
+    setLoading('正在確認你的位置…', '請在瀏覽器跳出的視窗允許定位');
     try{ loc = await locate(); }
     catch(e){ if(my === run) showError(e.message, true); return; }
-    if(my !== run) return; // 中途撳咗取消
+    if(my !== run) return; // 中途按了取消
   }
-  setLoading('搵緊附近餐廳…', '通常幾秒就得');
+  setLoading('正在找附近的餐廳…', '通常幾秒就好');
   startLoadingClock();
   try{
-    // 先搜揀咗嘅距離；唔夠 3 間先至搜遠啲
+    // 先搜尋選定的距離；不到 3 間才搜尋更遠
     for(const d of DIST_STEPS.filter(x => x >= prefs.dist)){
       const places = await getPlaces(loc, d, signal);
       if(my !== run) return;
@@ -606,10 +606,10 @@ async function go(refreshLoc){
       if(eligible(d, false, true).length >= 3) break;
     }
   }catch(e){
-    if(my === run) showError('地圖伺服器而家冇回應（佢哋係免費公共服務，有時好忙）。等一陣再試。', true);
+    if(my === run) showError('地圖伺服器目前沒有回應（它們是免費的公共服務，有時很忙）。請稍後再試。', true);
     return;
   }
-  if(!pool.length) return showError('1.5 公里內搵唔到餐廳資料，呢區嘅地圖資料可能未齊。', true);
+  if(!pool.length) return showError('1.5 公里內找不到餐廳資料，這一區的地圖資料可能還不齊全。', true);
   isDemo = false;
   startWheel();
 }
@@ -623,14 +623,14 @@ function goDemo(){
 function startWheel(){
   rejected.clear();
   if(!buildWheel()){
-    return showError(prefs.veg ? '附近搵唔到有標明素食嘅餐廳，試下熄咗「只要素食」。' : '附近搵唔到而家有開嘅餐廳。', false);
+    return showError(prefs.veg ? '附近找不到標明素食的餐廳，試試關掉「只要素食」。' : '附近找不到目前有營業的餐廳。', false);
   }
   showWheelAndSpin();
 }
 function showWheelAndSpin(){
   $('demo-badge-wheel').hidden = !isDemo;
   showStep('wheel');
-  setTimeout(spin, 450); // 等畫面出咗先轉
+  setTimeout(spin, 450); // 等畫面出現後再轉
 }
 
 $('btn-go').addEventListener('click', () => go(false));
@@ -639,7 +639,7 @@ $('btn-demo').addEventListener('click', goDemo);
 $('btn-cancel').addEventListener('click', () => { cancelRun(); renderPrefs(); showStep('start'); });
 $('btn-back-start').addEventListener('click', () => { if(!spinning){ clearError(); renderPrefs(); showStep('start'); } });
 
-/* ============ 揀邊幾間上輪盤 ============ */
+/* ============ 決定哪幾間上輪盤 ============ */
 function recentIds(){
   const cutoff = Date.now() - AVOID_REPEAT_DAYS*86400000;
   return new Set(store.get('todayeat_history', []).filter(h => h.ts > cutoff).map(h => h.id));
@@ -648,14 +648,14 @@ function eligible(dist, skipRejected, skipRecent){
   const recent = skipRecent ? recentIds() : new Set();
   return pool.filter(p =>
     p.distanceM <= dist &&
-    p.open !== false &&                 // 確定閂咗先剔走；唔知嘅照計，結果頁會提
+    p.open !== false &&                 // 確定已打烊才剔除；不確定的照樣列入，結果頁會提醒
     (!prefs.veg || p.veg) &&
     !(skipRejected && rejected.has(p.id)) &&
     !recent.has(p.id));
 }
 function buildWheel(){
   const dists = [poolRadius];
-  // 逐步放寬：先全部條件 → 唔理「今次唔想食」→ 連「呢兩日食過」都唔理
+  // 逐步放寬：先套用全部條件 → 不管「這次不想吃」→ 連「這兩天吃過」也不管
   const passes = [[true,true],[false,true],[false,false]];
   for(const [skipRejected, skipRecent] of passes){
     for(let i=0; i<dists.length; i++){
@@ -665,9 +665,9 @@ function buildWheel(){
         if(!skipRejected) rejected.clear();
         wheel = shuffle(list).slice(0, WHEEL_MAX);
         let note = list.length > wheel.length
-          ? `附近有 ${list.length} 間啱，隨機抽 ${wheel.length} 間上輪盤`
-          : `附近有 ${list.length} 間啱，全部上晒輪盤`;
-        if(!isDemo && poolRadius > prefs.dist) note += `（${prefs.dist} 米內唔夠揀，擴到 ${dists[i]} 米）`;
+          ? `附近有 ${list.length} 間符合，隨機抽 ${wheel.length} 間上輪盤`
+          : `附近有 ${list.length} 間符合，全部上輪盤`;
+        if(!isDemo && poolRadius > prefs.dist) note += `（${prefs.dist} 公尺內不夠選，擴大到 ${dists[i]} 公尺）`;
         $('wheel-note').textContent = note;
         drawWheel();
         return true;
@@ -692,7 +692,7 @@ function drawWheel(){
     ctx.moveTo(c,c);
     ctx.arc(c,c,c,start,start+seg);
     ctx.closePath();
-    // 尾一格同第一格撞色就換一隻
+    // 最後一格和第一格同色就換一個顏色
     let color = PALETTE[i % PALETTE.length];
     if(n > 1 && i === n-1 && color === PALETTE[0]) color = PALETTE[3];
     ctx.fillStyle = color;
@@ -713,7 +713,7 @@ function drawWheel(){
   rotation = 0;
   dial.style.transition = 'none';
   dial.style.transform = 'rotate(0deg)';
-  void dial.offsetWidth; // 強制重排，等下一次轉有動畫
+  void dial.offsetWidth; // 強制重排，讓下一次轉動有動畫
 }
 
 /* ============ 轉 ============ */
@@ -722,7 +722,7 @@ function spin(){
   spinning = true;
   $('btn-spin').disabled = true;
   const n = wheel.length, seg = 360/n;
-  const winner = Math.floor(Math.random()*n);          // 先公平抽，再轉去嗰格
+  const winner = Math.floor(Math.random()*n);          // 先公平抽出，再轉到那一格
   const theta = winner*seg + seg*(0.15 + Math.random()*0.7);
   const base = Math.ceil(rotation/360)*360;
   rotation = base + (5 + Math.floor(Math.random()*3))*360 + (360 - theta);
@@ -743,7 +743,7 @@ function spin(){
   if(reduce){ setTimeout(finish, 400); }
   else{
     dial.addEventListener('transitionend', finish, {once:true});
-    setTimeout(finish, 4700); // 分頁喺背景時 transitionend 未必嚟，保底
+    setTimeout(finish, 4700); // 分頁在背景時 transitionend 不一定會觸發，保底
   }
 }
 $('btn-spin').addEventListener('click', spin);
@@ -755,10 +755,10 @@ function showResult(p){
   $('result-name').textContent = p.name;
 
   const walkMin = Math.max(1, Math.round(p.distanceM / WALK_M_PER_MIN));
-  $('result-meta').textContent = [p.cuisine, `${p.distanceM} 米`, `行約 ${walkMin} 分鐘`].filter(Boolean).join(' ・ ');
+  $('result-meta').textContent = [p.cuisine, `${p.distanceM} 公尺`, `步行約 ${walkMin} 分鐘`].filter(Boolean).join(' ・ ');
 
   $('result-status').textContent = isDemo ? '' :
-    (p.open === true ? '🟢 而家營業中' : '⚪ 營業時間未確認，出發前睇一睇');
+    (p.open === true ? '🟢 目前營業中' : '⚪ 營業時間未確認，出發前先確認一下');
   $('result-detail').textContent = [p.address, p.hours ? '營業時間：' + p.hours : ''].filter(Boolean).join('\n');
   $('result-detail').style.whiteSpace = 'pre-line';
 
@@ -787,27 +787,27 @@ function showResult(p){
   phone.hidden = !tel;
   if(tel){
     phone.href = 'tel:' + tel;
-    phone.textContent = '📞 打去問下（' + p.phone.split(';')[0].trim() + '）';
+    phone.textContent = '📞 打電話問問（' + p.phone.split(';')[0].trim() + '）';
   }
-  $('toast').textContent = isDemo ? '呢間係示範資料，開定位先搵到真餐廳。' : '';
+  $('toast').textContent = isDemo ? '這間是示範資料，開啟定位才找得到真的餐廳。' : '';
   showStep('result');
 }
 
 $('btn-navigate').addEventListener('click', () => {
   if(!current || isDemo) return;
   addHistory(current);
-  $('toast').textContent = `記低咗 ✓ 呢 ${AVOID_REPEAT_DAYS} 日唔會再抽到呢間`;
+  $('toast').textContent = `已記錄 ✓ 這 ${AVOID_REPEAT_DAYS} 天不會再抽到這間`;
 });
 $('btn-reject').addEventListener('click', () => {
   if(current) rejected.add(current.id);
-  if(!buildWheel()) return showError('冇其他選擇喇，試下行遠啲。', false);
+  if(!buildWheel()) return showError('沒有其他選擇了，試試走遠一點。', false);
   showWheelAndSpin();
 });
 
 /* ============ 紀錄 ============ */
 function addHistory(p){
   const list = store.get('todayeat_history', []);
-  if(list[0] && list[0].id === p.id && Date.now() - list[0].ts < 3*3600000) return; // 連撳唔重複記
+  if(list[0] && list[0].id === p.id && Date.now() - list[0].ts < 3*3600000) return; // 連按不重複記錄
   list.unshift({id:p.id, name:p.name, lat:p.lat, lng:p.lng, ts:Date.now()});
   store.set('todayeat_history', list.slice(0,60));
 }
@@ -819,7 +819,7 @@ function renderHistory(){
   if(!list.length){
     const empty = document.createElement('div');
     empty.className = 'history-empty';
-    empty.textContent = '仲未有紀錄。';
+    empty.textContent = '還沒有紀錄。';
     wrap.appendChild(empty);
     return;
   }
@@ -828,7 +828,7 @@ function renderHistory(){
     const left = document.createElement('div');
     const name = document.createElement('div'); name.className = 'h-name'; name.textContent = h.name;
     const time = document.createElement('div'); time.className = 'h-time';
-    time.textContent = new Date(h.ts).toLocaleString('zh-HK', {month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit'});
+    time.textContent = new Date(h.ts).toLocaleString('zh-TW', {month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit'});
     left.append(name, time);
     item.appendChild(left);
     if(h.lat != null && h.lng != null){
@@ -845,7 +845,7 @@ $('btn-history-start').addEventListener('click', () => openHistory('start'));
 $('btn-history-result').addEventListener('click', () => openHistory('result'));
 $('btn-history-back').addEventListener('click', () => showStep(historyReturn));
 $('btn-history-clear').addEventListener('click', () => {
-  if(confirm('清除晒所有紀錄？')){ store.set('todayeat_history', []); renderHistory(); }
+  if(confirm('要清除所有紀錄嗎？')){ store.set('todayeat_history', []); renderHistory(); }
 });
 
 renderPrefs();
