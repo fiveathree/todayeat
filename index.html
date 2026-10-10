@@ -28,9 +28,9 @@
       radial-gradient(circle at 88% 12%, rgba(47,182,165,0.25), transparent 42%),
       radial-gradient(circle at 82% 88%, rgba(255,107,74,0.22), transparent 45%),
       var(--cream);
-    min-height:100vh;
+    min-height:100vh; min-height:100dvh;
     display:flex; align-items:center; justify-content:center;
-    padding:24px 16px;
+    padding:12px;
     -webkit-font-smoothing:antialiased;
   }
   .app-shell{
@@ -38,7 +38,7 @@
     background:radial-gradient(circle at calc(100% - 20px) 20px, rgba(255,201,77,0.25) 0 80px, transparent 81px), var(--card); /* 右上角的裝飾圓 */
     border-radius:28px;
     box-shadow:0 30px 70px -30px rgba(43,33,24,0.35);
-    padding:36px 24px 24px;
+    padding:28px 22px 16px;
     position:relative; overflow:hidden;
   }
   .step{display:none; position:relative;}
@@ -47,18 +47,18 @@
 
   h1{
     font-family:'ZCOOL KuaiLe',sans-serif; font-weight:400;
-    font-size:32px; text-align:center; color:var(--tomato-deep); margin-bottom:6px;
+    font-size:30px; line-height:1.2; text-align:center; color:var(--tomato-deep); margin-bottom:4px;
   }
-  .subtitle{text-align:center; color:var(--muted); font-size:14px; margin-bottom:24px;}
-  .icon-row{text-align:center; font-size:48px; margin-bottom:24px;}
+  .subtitle{text-align:center; color:var(--muted); font-size:13.5px; margin-bottom:12px;}
+  .icon-row{text-align:center; font-size:34px; line-height:1.2; margin-bottom:12px;}
 
   .btn{
     display:block; width:100%; border:none; border-radius:100px;
-    padding:16px; font-family:inherit; font-size:16px; font-weight:700;
+    padding:14px; font-family:inherit; font-size:16px; font-weight:700;
     cursor:pointer; text-align:center; text-decoration:none;
     transition:transform 0.15s ease, background 0.15s ease;
   }
-  .btn + .btn{margin-top:12px;}
+  .btn + .btn{margin-top:10px;}
   .btn:active{transform:scale(0.97);}
   .btn:focus-visible, .chip:focus-visible, .link:focus-visible{outline:2px solid var(--plum); outline-offset:3px;}
   .btn-primary{background:var(--tomato); color:#fff; box-shadow:0 10px 24px -8px rgba(255,107,74,0.6);}
@@ -73,7 +73,7 @@
     background:none; border:none; font-family:inherit; font-size:13px;
     color:var(--plum); text-decoration:underline; text-underline-offset:3px; cursor:pointer;
   }
-  .link-row{display:flex; justify-content:center; gap:20px; margin-top:20px; flex-wrap:wrap;}
+  .link-row{display:flex; justify-content:center; gap:20px; margin-top:14px; flex-wrap:wrap;}
 
   .hint{text-align:center; font-size:12.5px; color:var(--muted); line-height:1.6;}
   .error-box{
@@ -82,8 +82,9 @@
   }
   .error-box.show{display:block;}
 
-  .prefs{border-top:1px solid var(--line); margin-top:24px; padding-top:20px;}
-  .walk-value{text-align:center; margin:4px 0 10px;}
+  .prefs{border-top:1px solid var(--line); margin-top:14px; padding-top:12px;}
+  .pref-row{display:flex; justify-content:space-between; align-items:center; gap:12px;}
+  .walk-value{text-align:center; margin:0 0 2px;}
   .walk-value b{font-family:'ZCOOL KuaiLe',sans-serif; font-weight:400; font-size:24px; color:var(--tomato-deep);}
   .walk-value span{font-size:12.5px; color:var(--muted); margin-left:6px;}
   .walk-slider{
@@ -106,7 +107,7 @@
   }
   .walk-slider:focus-visible{outline:2px solid var(--plum); outline-offset:4px; border-radius:10px;}
   /* 圖示對齊拉桿上的 1、7、13、20 分鐘；左右各留半個拉桿圓鈕的寬度 */
-  .walk-icons{position:relative; height:74px; margin:6px 14px 14px;}
+  .walk-icons{position:relative; height:72px; margin:4px 14px 10px;}
   .walk-icon{
     position:absolute; top:0; width:56px; margin-left:-28px; padding:0;
     background:none; border:none; cursor:pointer; font-family:inherit; text-align:center;
@@ -121,7 +122,7 @@
   .walk-icon[data-kind="tired"][aria-pressed="true"] svg, .walk-icon[data-kind="cane"][aria-pressed="true"] svg{animation-duration:1.8s;}
   @keyframes walk-bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-3px);}}
   @keyframes walk-dance{0%,100%{transform:rotate(-9deg);} 50%{transform:rotate(9deg);}}
-  .pref-label{font-size:13px; font-weight:700; margin-bottom:8px;}
+  .pref-label{font-size:13px; font-weight:700; margin-bottom:2px;}
   .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
   .chip{
     border:1.5px solid var(--line); background:#fff; color:var(--ink);
@@ -139,14 +140,77 @@
   .loading-text{text-align:center; font-size:15px; font-weight:500;}
   .loading-sub{text-align:center; font-size:12.5px; color:var(--muted); margin:6px 0 24px; min-height:18px;}
 
-  .topbar{display:flex; justify-content:space-between; align-items:center; min-height:24px; margin:-16px 0 12px; position:relative; z-index:1;}
-  .where{text-align:center; font-size:13px; margin-top:14px; line-height:1.8;}
-  .where b{font-weight:700;}
-  .info-box{background:#FFF3D6; color:#6B4E00; border-radius:14px; padding:14px 16px; font-size:13.5px; line-height:1.7; margin-bottom:16px;}
-  .area-chips{max-height:260px; overflow-y:auto; padding:2px; margin-bottom:8px;}
-  .divider{text-align:center; font-size:12.5px; color:var(--muted); margin:18px 0 14px;}
-  .wheel-note{text-align:center; font-size:13.5px; margin-bottom:20px; line-height:1.6;}
-  .wheel-stage{position:relative; width:280px; height:280px; margin:0 auto 28px;}
+  /* 頂列：左邊首頁，右邊語言 */
+  .topbar{display:flex; justify-content:space-between; align-items:center; min-height:38px; margin:-12px 0 10px;}
+  .pill-btn{
+    display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 16px 0 12px;
+    border:1.5px solid var(--line); border-radius:100px; background:#fff; color:var(--ink);
+    font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
+    box-shadow:0 4px 10px -6px rgba(43,33,24,0.35); transition:transform 0.15s ease, border-color 0.15s ease;
+  }
+  .pill-btn svg{width:18px; height:18px; color:var(--tomato-deep);}
+  .pill-btn:hover{border-color:var(--tomato);}
+  .pill-btn:active{transform:scale(0.96);}
+  .seg{display:inline-flex; padding:3px; border-radius:100px; background:var(--line);}
+  .seg button{
+    border:none; background:none; height:32px; padding:0 14px; border-radius:100px;
+    font-family:inherit; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .seg button[aria-pressed="true"]{background:#fff; color:var(--tomato-deep); box-shadow:0 1px 4px rgba(43,33,24,0.2);}
+  .seg-wide{display:flex;}
+  .seg-wide button{flex:1; height:38px; font-size:14px;}
+  .pill-btn:focus-visible, .seg button:focus-visible, .info-btn:focus-visible, .sugg-row:focus-visible{outline:2px solid var(--plum); outline-offset:2px;}
+
+  .where{display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:4px 8px; font-size:13px; margin-top:14px;}
+  .info-btn{
+    width:22px; height:22px; border-radius:50%; border:none; padding:0; flex:none;
+    background:var(--mustard); color:#5A3E00; font-family:inherit; font-size:13px; font-weight:900; line-height:22px; cursor:pointer;
+  }
+
+  /* 選地點 */
+  .place-sub{text-align:center; font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.6;}
+  .place-note{text-align:center; font-size:13px; color:#8A6300; background:#FFF3D6; border-radius:12px; padding:10px 12px; margin-bottom:14px; line-height:1.6;}
+  .search{position:relative; margin:14px 0 12px;}
+  .search input{
+    width:100%; height:50px; border-radius:16px; border:1.5px solid var(--line); background:#fff; color:var(--ink);
+    padding:0 46px; font-family:inherit; font-size:16px; /* 16px 以上 iPhone 才不會自動放大畫面 */
+    -webkit-appearance:none; appearance:none;
+  }
+  .search input::placeholder{color:#B9AC9B;}
+  .search input:focus{outline:none; border-color:var(--tomato); box-shadow:0 0 0 4px rgba(255,107,74,0.15);}
+  .search input::-webkit-search-cancel-button{display:none;}
+  .search .s-icon{position:absolute; left:15px; top:50%; width:20px; height:20px; margin-top:-10px; color:var(--muted); pointer-events:none;}
+  .search .s-clear{
+    position:absolute; right:9px; top:50%; width:32px; height:32px; margin-top:-16px; border-radius:50%;
+    border:none; background:var(--line); color:var(--ink); font-size:15px; line-height:32px; padding:0; cursor:pointer;
+  }
+  .sugg{border:1.5px solid var(--line); border-radius:16px; overflow-y:auto; max-height:44vh; max-height:44dvh; margin-bottom:6px; background:#fff;}
+  .sugg-row{
+    display:flex; align-items:center; gap:12px; width:100%; padding:12px 14px; background:#fff;
+    border:none; border-top:1px solid var(--line); text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+  }
+  .sugg-row:first-child{border-top:none;}
+  .sugg-row:hover{background:var(--cream);}
+  .sugg-row .s-pin{flex:none; width:32px; height:32px; border-radius:50%; background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:15px;}
+  .sugg-row .s-main{flex:1; min-width:0;}
+  .sugg-row .s-name{font-size:15px; font-weight:700; overflow-wrap:anywhere;}
+  .sugg-row .s-sub{font-size:12px; color:var(--muted); margin-top:1px; overflow-wrap:anywhere;}
+  .sugg-row.action .s-name{color:var(--plum);}
+  .sugg-row.action .s-pin{background:#F3E9F4;}
+  .sugg-note{padding:14px; font-size:13.5px; color:var(--muted); text-align:center; border-top:1px solid var(--line);}
+  .sugg-note:first-child{border-top:none;}
+  .pop-label{font-size:12.5px; font-weight:700; color:var(--muted); margin:2px 0 10px;}
+
+  /* 彈出視窗 */
+  .modal{position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(43,33,24,0.5); animation:fade-in 0.2s ease;}
+  .modal-card{width:100%; max-width:380px; background:#fff; border-radius:24px; padding:26px 22px 20px; box-shadow:0 30px 70px -20px rgba(43,33,24,0.6); animation:fade-up 0.25s ease;}
+  .modal-card h2{font-size:18px; font-weight:700; margin-bottom:12px;}
+  .modal-card p{font-size:14px; line-height:1.75; margin-bottom:12px;}
+  .modal-card p:last-of-type{margin-bottom:18px;}
+  @keyframes fade-in{from{opacity:0;} to{opacity:1;}}
+  .wheel-note{text-align:center; font-size:13.5px; margin-bottom:14px; line-height:1.6;}
+  .wheel-stage{position:relative; width:280px; height:280px; margin:8px auto 22px;}
   .pointer{
     position:absolute; top:-8px; left:50%; transform:translateX(-50%);
     width:0; height:0;
@@ -169,18 +233,18 @@
   .result-label{text-align:center; font-size:13px; color:var(--muted); margin-bottom:4px;}
   .result-name{
     text-align:center; font-family:'ZCOOL KuaiLe',sans-serif;
-    font-size:30px; line-height:1.3; color:var(--tomato-deep);
-    margin-bottom:8px; overflow-wrap:anywhere;
+    font-size:28px; line-height:1.25; color:var(--tomato-deep);
+    margin-bottom:6px; overflow-wrap:anywhere;
   }
-  .result-meta{text-align:center; font-size:14px; margin-bottom:12px;}
+  .result-meta{text-align:center; font-size:14px; margin-bottom:6px;}
   .result-status{text-align:center; font-size:13px; margin-bottom:4px;}
   .result-detail{text-align:center; font-size:12.5px; color:var(--muted); line-height:1.6; overflow-wrap:anywhere;}
   .result-map{
-    width:100%; height:150px; border-radius:14px; overflow:hidden;
-    margin:16px 0; border:1px solid var(--line);
+    width:100%; height:clamp(84px, 17vh, 150px); height:clamp(84px, 17dvh, 150px); border-radius:14px; overflow:hidden;
+    margin:10px 0 12px; border:1px solid var(--line); /* 高度跟著螢幕縮放，矮螢幕也不用捲動 */
   }
   .result-map iframe{width:100%; height:100%; border:0;}
-  .toast{text-align:center; font-size:12.5px; color:var(--teal-deep); min-height:20px; margin:10px 0 2px;}
+  .toast{text-align:center; font-size:12.5px; color:var(--teal-deep); min-height:18px; margin:6px 0 0;}
 
   .section-title{text-align:center; font-size:16px; font-weight:700; margin-bottom:6px;}
   .history-item{
@@ -190,14 +254,36 @@
   .history-item .h-name{font-weight:700; font-size:15px; overflow-wrap:anywhere;}
   .history-item .h-time{font-size:12px; color:var(--muted); margin-top:2px;}
   .history-item a{font-size:13px; color:var(--plum); white-space:nowrap;}
+  #history-list{max-height:46vh; max-height:46dvh; overflow-y:auto; margin-bottom:12px; -webkit-overflow-scrolling:touch;}
   .history-empty{text-align:center; font-size:13.5px; color:var(--muted); padding:28px 0;}
 
   .footer{
     text-align:center; font-size:11px; color:var(--muted);
-    margin-top:24px; padding-top:14px; border-top:1px solid var(--line); line-height:1.6;
+    margin-top:14px; padding-top:10px; border-top:1px solid var(--line); line-height:1.6;
   }
   .footer a{color:inherit;}
 
+  /* 矮螢幕（例如 iPhone SE）：再縮一點，盡量不用捲動 */
+  @media (max-height:620px){
+    body{padding:8px;}
+    .app-shell{padding:22px 20px 10px;}
+    .icon-row{display:none;}
+    .subtitle{margin-bottom:10px;}
+    .btn{padding:12px;}
+    .btn + .btn{margin-top:8px;}
+    .prefs{margin-top:10px; padding-top:10px;}
+    .walk-icons{height:68px; margin-bottom:6px;}
+    .wheel-stage{transform:scale(0.84); margin:-14px auto 0;}
+    .result-name{font-size:25px;}
+    .result-map{height:60px; margin:8px 0;}
+    .toast{min-height:0; margin:2px 0 0;}
+    .link-row{margin-top:8px;}
+    .footer{margin-top:8px; padding-top:6px;}
+    #history-list{max-height:36vh; max-height:36dvh;}
+    .sugg{max-height:30vh; max-height:30dvh;}
+    .search{margin:10px 0;}
+    .place-sub{margin-bottom:10px;}
+  }
   @media (prefers-reduced-motion: reduce){
     .spinner, .step.active, .walk-icon svg{animation:none !important;}
   }
@@ -208,9 +294,15 @@
 <main class="app-shell">
 
   <div class="topbar">
-    <button class="link" id="btn-home" hidden data-i18n="home"></button>
+    <button class="pill-btn" id="btn-home" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5.5h4v5.5"/></svg>
+      <span data-i18n="home"></span>
+    </button>
     <span></span>
-    <button class="link" id="btn-lang"></button>
+    <div class="seg" id="lang-toggle" role="group" aria-label="Language / 語言">
+      <button data-lang="zh">中文</button>
+      <button data-lang="en">EN</button>
+    </div>
   </div>
 
   <!-- 首頁 -->
@@ -220,21 +312,21 @@
     <div class="icon-row" aria-hidden="true">🍜🎡🥡</div>
     <div class="error-box" id="error-box" role="alert"></div>
     <button class="btn btn-primary" id="btn-go" data-i18n="go"></button>
-    <div class="where"><span id="where-label"></span>　<button class="link" id="btn-change-loc" data-i18n="changePlace"></button></div>
+    <div class="where">
+      <button class="info-btn" id="btn-loc-info">!</button>
+      <span id="where-label"></span>
+      <button class="link" id="btn-change-loc" data-i18n="changePlace"></button>
+    </div>
 
     <div class="prefs">
       <div class="pref-label" data-i18n="distLabel"></div>
       <div class="walk-value"><b id="walk-min"></b><span id="walk-dist"></span></div>
       <input class="walk-slider" id="walk-slider" type="range" min="1" max="20" step="1">
       <div class="walk-icons" id="walk-icons"></div>
-      <div class="chips" style="margin-bottom:0;">
+      <div class="pref-row">
         <button class="chip" id="chip-veg" aria-pressed="false" data-i18n="vegOnly"></button>
+        <button class="link" id="btn-history-start" data-i18n="history"></button>
       </div>
-    </div>
-    <p class="hint" style="margin-top:16px;" data-i18n="prefHint"></p>
-
-    <div class="link-row">
-      <button class="link" id="btn-history-start" data-i18n="history"></button>
     </div>
   </section>
 
@@ -249,12 +341,19 @@
   <!-- 選地點 -->
   <section class="step" id="step-place">
     <div class="section-title" data-i18n="placeTitle"></div>
-    <div class="info-box" id="place-msg" hidden></div>
-    <button class="btn btn-primary" id="btn-use-gps" data-i18n="useGps"></button>
-    <div class="divider" data-i18n="orPick"></div>
-    <div class="chips" id="region-chips"></div>
-    <div class="chips area-chips" id="area-chips"></div>
-    <p class="hint" data-i18n="placeHint"></p>
+    <p class="place-sub" data-i18n="placeSub"></p>
+    <div class="place-note" id="place-note" hidden><span id="place-note-text"></span> <button class="link" id="btn-how-enable" data-i18n="howEnable"></button></div>
+    <div class="seg seg-wide" id="region-seg" role="group"></div>
+    <div class="search">
+      <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+      <input type="search" id="place-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+      <button class="s-clear" id="place-clear" hidden>✕</button>
+    </div>
+    <div class="sugg" id="place-sugg" hidden></div>
+    <div id="place-popular">
+      <div class="pop-label" data-i18n="popular"></div>
+      <div class="chips" id="pop-chips"></div>
+    </div>
   </section>
 
   <!-- 輪盤 -->
@@ -296,9 +395,20 @@
     <button class="btn btn-secondary" id="btn-history-clear" data-i18n="clearHistory"></button>
   </section>
 
+  <!-- 定位說明（按首頁的 ! 開啟） -->
+  <div class="modal" id="loc-modal" hidden role="dialog" aria-modal="true" aria-labelledby="loc-modal-title">
+    <div class="modal-card">
+      <h2 id="loc-modal-title" data-i18n="locInfoTitle"></h2>
+      <p id="loc-modal-now"></p>
+      <p id="loc-modal-help"></p>
+      <p data-i18n="footPrivacy" style="font-size:12.5px; color:var(--muted);"></p>
+      <button class="btn btn-primary" id="btn-use-gps"></button>
+      <button class="btn btn-secondary" id="btn-modal-close" data-i18n="close"></button>
+    </div>
+  </div>
+
   <div class="footer">
-    <span data-i18n="footData"></span> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a><br>
-    <span data-i18n="footPrivacy"></span>
+    <span data-i18n="footData"></span> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>
   </div>
 </main>
 
@@ -328,7 +438,7 @@ const WALK_SVG = {
   dance:'<circle cx="24" cy="10" r="6" fill="#FFC94D"/><path d="M24 16 22 32M23 20 12 9M23 20 36 13M22 32 14 46M22 32 32 40 38 33"/><path d="M39 3v7M39 3l4 1.5M6 22v6M6 22l4 1.5" stroke-width="2"/><circle cx="37.5" cy="10.5" r="1.8" fill="currentColor" stroke="none"/><circle cx="4.5" cy="28.5" r="1.8" fill="currentColor" stroke="none"/>',
   walk:'<circle cx="24" cy="10" r="6" fill="#FFC94D"/><path d="M24 16V33M24 21 16 29M24 21 32 28M24 33 16 47M24 33 31 47"/>',
   tired:'<circle cx="31" cy="15" r="6" fill="#FFC94D"/><path d="M28 20 20 35M26 24 29 37M25 25 20 37M20 35 15 48M20 35 26 48"/><path d="M41 5c-1.5 2.5-2 3.5-2 4.5a2 2 0 0 0 4 0c0-1-.5-2-2-4.5zM44 15c-1 1.8-1.5 2.5-1.5 3.2a1.5 1.5 0 0 0 3 0c0-.7-.5-1.4-1.5-3.2z" fill="#5AA9E6" stroke="none"/>',
-  cane:'<circle cx="21" cy="12" r="6" fill="#FFC94D"/><path d="M21 18 19 34M20 23 32 28M19 34 14 48M19 34 24 48"/><path d="M29 27a3 3 0 0 1 6 0V48" stroke="#8A5A8C"/>'
+  cane:'<path d="M15 35Q16 24 28 21M25 23 36 31M15 35 11 42 13 49M15 35 20 42 19 49"/><path d="M34 31a3 3 0 0 1 6 0V49" stroke="#8A5A8C"/><circle cx="33" cy="16" r="6" fill="#FFC94D"/><path d="M28.5 18.5Q30 30 34.5 33 38 29 38.5 19 33.5 22.5 28.5 18.5z" fill="#fff" stroke-width="2"/><path d="M42 8c-1 1.8-1.5 2.5-1.5 3.2a1.5 1.5 0 0 0 3 0c0-.7-.5-1.4-1.5-3.2z" fill="#5AA9E6" stroke="none"/>'
 };
 const PALETTE = ['#FF6B4A','#2FB6A5','#8A5A8C','#F2A65A','#5AA9E6','#D9534F','#3C9D6F'];
 
@@ -344,9 +454,11 @@ const CUISINE_ZH = {
   fast_food:'速食', food_court:'美食廣場'
 };
 
-/* 手動選地點用的清單：[中文, 英文, 緯度, 經度]，以車站／地標為中心 */
+/* 手動選地點：areas 是內建清單 [中文, 英文, 緯度, 經度]，打字時即時比對；
+   pop 是輸入框下方的熱門地點；vb 是清單沒有時到地圖搜尋的範圍（西,北,東,南） */
 const REGIONS = [
-  {id:'hk', zh:'香港', en:'Hong Kong', areas:[
+  {id:'hk', zh:'香港', en:'Hong Kong', vb:'113.82,22.58,114.45,22.14',
+   pop:['中環','灣仔','銅鑼灣','尖沙咀','旺角','觀塘','沙田','荃灣'], areas:[
     ["中環", "Central", 22.2819, 114.1581],
     ["上環", "Sheung Wan", 22.2859, 114.1537],
     ["金鐘", "Admiralty", 22.2785, 114.1646],
@@ -373,7 +485,8 @@ const REGIONS = [
     ["屯門", "Tuen Mun", 22.3947, 113.9737],
     ["東涌", "Tung Chung", 22.2893, 113.9415]
   ]},
-  {id:'mo', zh:'澳門', en:'Macau', areas:[
+  {id:'mo', zh:'澳門', en:'Macau', vb:'113.52,22.22,113.61,22.10',
+   pop:['議事亭前地','新口岸','關閘','氹仔官也街','路氹城','路環'], areas:[
     ["議事亭前地", "Senado Square", 22.1938, 113.54],
     ["新口岸", "NAPE", 22.1874, 113.5514],
     ["關閘", "Border Gate", 22.2159, 113.5492],
@@ -382,7 +495,8 @@ const REGIONS = [
     ["路氹城", "Cotai", 22.1467, 113.5602],
     ["路環", "Coloane Village", 22.1164, 113.5513]
   ]},
-  {id:'tw', zh:'台灣', en:'Taiwan', areas:[
+  {id:'tw', zh:'台灣', en:'Taiwan', vb:'119.9,25.4,122.1,21.8',
+   pop:['台北車站','西門','中山','忠孝復興','市政府／信義','板橋','台中車站','高雄車站'], areas:[
     ["台北車站", "Taipei Main Station", 25.0462, 121.5175],
     ["西門", "Ximen", 25.0424, 121.5086],
     ["中山", "Zhongshan", 25.0524, 121.5221],
@@ -423,24 +537,29 @@ const REGIONS = [
 /* ============ 介面文字（繁體中文／English） ============ */
 const I18N = {
   zh: {
-    langName:'繁體中文', docTitle:'今日吃甚麼 — 命運大輪盤',
+    docTitle:'今日吃甚麼 — 命運大輪盤',
     desc:'吃飯時間不用想，按一下，輪盤幫你挑一間附近的餐廳。',
     title:'今日吃甚麼', subtitle:'吃飯時間不用想，按一下就有答案',
-    home:'🏠 首頁', go:'🎯 幫我選這餐吃什麼', changePlace:'更改地點',
+    home:'首頁', go:'🎯 幫我選這餐吃什麼', changePlace:'更改地點',
     whereGps:'📍 使用手機定位', whereManual:n => `📍 ${n} 附近`,
     distLabel:'🚶 最遠願意走多遠？', walkMin:min => `約 ${min} 分鐘`, walkDist:d => `${d}內`, minShort:min => `${min} 分鐘`,
     walkAria:(min, d) => `最遠走 ${min} 分鐘，大約 ${d}`,
     m:n => `${n} 公尺`, km:n => `${n} 公里`,
-    vegOnly:'🥬 只要素食', prefHint:'偏好會記住，下次打開直接按就好。', history:'📜 吃過的紀錄',
+    vegOnly:'🥬 只要素食', history:'📜 吃過的紀錄',
     cancel:'取消', locating:'正在確認你的位置…', locatingSub:'請在瀏覽器跳出的視窗按「允許」',
     searching:'正在找附近的餐廳…', searchingSub:'通常幾秒就好', slow:'地圖伺服器有點慢，再等一下…',
     stillWaiting:(s, max) => `還在等（${s} 秒）… 最多等 ${max} 秒`,
-    placeTitle:'你在哪裡？', useGps:'📍 用手機定位', orPick:'— 或直接選一個地點 —',
-    placeHint:'選了之後會記住，之後都用這個地點找餐廳，隨時可以改。',
-    geoDeniedIos:'定位沒有開啟。iPhone 請到「設定 → 隱私權與安全性 → 定位服務」，找到你正在用的瀏覽器（Chrome 或 Safari 網站），選「使用 App 期間」，再回來按「用手機定位」。不想設定的話，直接在下面選地點就可以。',
-    geoDenied:'定位沒有開啟。請在瀏覽器的網站設定裡允許這個網站使用位置，再按「用手機定位」。不想設定的話，直接在下面選地點就可以。',
-    geoFailed:'取不到定位（訊號不好或逾時）。可以再試一次，或直接在下面選地點。',
-    geoUnsupported:'這個瀏覽器不支援定位，請直接在下面選地點。',
+    placeTitle:'你在哪裡？', placeSub:'輸入地區、車站或地標，之後都用這裡找餐廳。',
+    searchPh:'例如：旺角、官也街、台北車站', popular:'熱門地點', clear:'清除',
+    searchMap:q => `在地圖上搜尋「${q}」`, searchMapSub:r => `內建清單沒有的地點，到${r}地圖找`, searchingMap:'搜尋中…',
+    noMatch:r => `在${r}找不到這個地點，換個寫法或切換地區試試。`, searchFail:'地圖搜尋暫時無法使用，請先從熱門地點選。',
+    geoOffNote:'定位沒有開啟，先選一個地點吧。', geoFailNote:'取不到定位，先選一個地點吧。', howEnable:'怎麼開啟定位？',
+    locInfoTitle:'關於定位', locInfoAria:'定位說明', close:'關閉',
+    locNowGps:'目前用手機定位找附近的餐廳。第一次使用時瀏覽器會跳出詢問，請按「允許」。',
+    locNowManual:n => `目前用「${n}」當作你的位置。`,
+    locHelpIos:'沒有跳出詢問，或之前按了拒絕？iPhone 請到「設定 → 隱私權與安全性 → 定位服務」，找到你正在用的瀏覽器（Chrome 或 Safari 網站），選「使用 App 期間」，再回來按下面的按鈕。',
+    locHelp:'沒有跳出詢問，或之前按了拒絕？請在瀏覽器的網站設定裡允許這個網站使用位置，再回來按下面的按鈕。',
+    useGps:'📍 用手機定位', retryGps:'📍 重新定位',
     serverDown:'地圖伺服器目前沒有回應（它們是免費的公共服務，有時很忙）。請稍後再按一次。',
     noData:d => `${d}內找不到餐廳資料，這一區的地圖資料可能還不齊全。試試換一個地點。`,
     noVeg:'附近找不到標明素食的餐廳，試試關掉「只要素食」。', noOpen:'附近找不到目前有營業的餐廳。',
@@ -453,27 +572,32 @@ const I18N = {
     mapTitle:'餐廳位置地圖', saved:n => `已記錄 ✓ 這 ${n} 天不會再抽到這間`, noMore:'沒有其他選擇了，試試走遠一點。',
     historyHint:n => `按過「就吃這間」才會記錄。這 ${n} 天吃過的不會再抽到。`, historyEmpty:'還沒有紀錄。',
     backToResult:'← 回到結果', clearHistory:'🗑️ 清除紀錄', clearConfirm:'要清除所有紀錄嗎？', map:'📍 地圖',
-    footData:'餐廳資料', footPrivacy:'你的位置只會留在這台裝置，並用來查詢附近餐廳', sep:' ・ ', locale:'zh-TW'
+    footData:'餐廳資料', footPrivacy:'你的位置只會留在這台裝置，並用來查詢附近餐廳。', sep:' ・ ', locale:'zh-TW'
   },
   en: {
-    langName:'English', docTitle:'What to Eat Today — Wheel of Fate',
+    docTitle:'What to Eat Today — Wheel of Fate',
     desc:'Can’t decide what to eat? One tap and the wheel picks a restaurant near you.',
     title:'What to Eat Today', subtitle:'No thinking needed. One tap, one answer.',
-    home:'🏠 Home', go:'🎯 Pick my meal', changePlace:'Change',
+    home:'Home', go:'🎯 Pick my meal', changePlace:'Change',
     whereGps:'📍 Using your phone’s location', whereManual:n => `📍 Near ${n}`,
     distLabel:'🚶 How far will you walk?', walkMin:min => `About ${min} min`, walkDist:d => `within ${d}`, minShort:min => `${min} min`,
     walkAria:(min, d) => `Walk up to ${min} minutes, about ${d}`,
     m:n => `${n} m`, km:n => `${n} km`,
-    vegOnly:'🥬 Vegetarian only', prefHint:'Your preferences are saved. Next time, just tap.', history:'📜 Places I’ve eaten',
+    vegOnly:'🥬 Vegetarian only', history:'📜 Places I’ve eaten',
     cancel:'Cancel', locating:'Finding where you are…', locatingSub:'Tap “Allow” when your browser asks',
     searching:'Looking for restaurants nearby…', searchingSub:'Usually takes a few seconds', slow:'The map server is a bit slow, hang on…',
     stillWaiting:(s, max) => `Still waiting (${s}s)… up to ${max}s`,
-    placeTitle:'Where are you?', useGps:'📍 Use my phone’s location', orPick:'— or pick a place —',
-    placeHint:'Your choice is saved and used from now on. You can change it any time.',
-    geoDeniedIos:'Location is turned off. On iPhone, go to Settings → Privacy & Security → Location Services, find the browser you are using (Chrome or Safari Websites), choose “While Using the App”, then come back and tap “Use my phone’s location”. Or just pick a place below.',
-    geoDenied:'Location is turned off. Allow location for this site in your browser’s site settings, then tap “Use my phone’s location”. Or just pick a place below.',
-    geoFailed:'Couldn’t get your location (weak signal or timed out). Try again, or pick a place below.',
-    geoUnsupported:'This browser doesn’t support location. Please pick a place below.',
+    placeTitle:'Where are you?', placeSub:'Type a district, station or landmark. We\u2019ll look for restaurants around it from now on.',
+    searchPh:'e.g. Mong Kok, Taipa, Taipei Main Station', popular:'Popular places', clear:'Clear',
+    searchMap:q => `Search the map for “${q}”`, searchMapSub:r => `For places not in the built-in list, look in ${r}`, searchingMap:'Searching…',
+    noMatch:r => `Couldn\u2019t find that in ${r}. Try another spelling or switch region.`, searchFail:'Map search isn\u2019t available right now. Please pick a popular place.',
+    geoOffNote:'Location is off, so pick a place instead.', geoFailNote:'Couldn\u2019t get your location, so pick a place instead.', howEnable:'How do I turn it on?',
+    locInfoTitle:'About location', locInfoAria:'About location', close:'Close',
+    locNowGps:'Right now we use your phone\u2019s location to find restaurants nearby. The first time, your browser will ask. Tap “Allow”.',
+    locNowManual:n => `Right now “${n}” is used as your location.`,
+    locHelpIos:'No prompt, or you tapped “Don\u2019t Allow” before? On iPhone, go to Settings → Privacy & Security → Location Services, find the browser you are using (Chrome or Safari Websites), choose “While Using the App”, then come back and tap the button below.',
+    locHelp:'No prompt, or you blocked it before? Allow location for this site in your browser\u2019s site settings, then come back and tap the button below.',
+    useGps:'📍 Use my phone\u2019s location', retryGps:'📍 Locate me again',
     serverDown:'The map servers aren’t responding right now (they are free public services and sometimes busy). Please try again in a moment.',
     noData:d => `No restaurant data within ${d}. This area may not be well mapped yet. Try another place.`,
     noVeg:'No restaurants marked vegetarian nearby. Try turning off “Vegetarian only”.', noOpen:'No restaurants open nearby right now.',
@@ -486,7 +610,7 @@ const I18N = {
     mapTitle:'Map of the restaurant', saved:n => `Saved ✓ You won’t get this one again for ${n} days`, noMore:'No other options. Try a longer walking distance.',
     historyHint:n => `Places are saved when you tap “Let’s go”. Anything from the last ${n} days is skipped.`, historyEmpty:'Nothing here yet.',
     backToResult:'← Back to result', clearHistory:'🗑️ Clear history', clearConfirm:'Clear all history?', map:'📍 Map',
-    footData:'Restaurant data', footPrivacy:'Your location stays on this device and is only used to look up nearby restaurants', sep:' · ', locale:'en-GB'
+    footData:'Restaurant data', footPrivacy:'Your location stays on this device and is only used to look up nearby restaurants.', sep:' · ', locale:'en-GB'
   }
 };
 
@@ -624,7 +748,7 @@ let rejected = new Set(); // 這次已經說不想吃的
 let rotation = 0, spinning = false, spinToken = 0, current = null;
 let memLoc = null;
 let run = 0, runCtrl = null, loadClock = null; // 用來取消進行中的搜尋
-let regionId = null, goAfterPick = false;
+let regionId = 'hk', goAfterPick = false;
 
 /* ============ 語言 ============ */
 function t(key, ...args){
@@ -647,12 +771,17 @@ function applyLang(){
   document.title = t('docTitle');
   document.querySelector('meta[name="description"]').setAttribute('content', t('desc'));
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  $('btn-lang').textContent = '🌐 ' + I18N[lang === 'zh' ? 'en' : 'zh'].langName;
+  document.querySelectorAll('#lang-toggle button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  $('btn-loc-info').setAttribute('aria-label', t('locInfoAria'));
+  $('place-input').placeholder = t('searchPh');
+  $('place-clear').setAttribute('aria-label', t('clear'));
   $('history-hint').textContent = t('historyHint', AVOID_REPEAT_DAYS);
   renderPrefs();
 }
-$('btn-lang').addEventListener('click', () => {
-  lang = lang === 'zh' ? 'en' : 'zh';
+$('lang-toggle').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if(!btn || btn.dataset.lang === lang) return;
+  lang = btn.dataset.lang;
   store.set('todayeat_lang', lang);
   clearError();
   applyLang();
@@ -664,7 +793,7 @@ function showStep(name){
   if(name !== 'loading') stopLoadingClock();
   STEPS.forEach(s => $('step-'+s).classList.toggle('active', s === name));
   $('btn-home').hidden = name === 'start';   // 首頁以外都有「首頁」
-  $('btn-lang').hidden = name !== 'start';   // 語言只在首頁切換
+  $('lang-toggle').hidden = name !== 'start'; // 語言只在首頁切換
   window.scrollTo(0,0);
 }
 function goHome(){
@@ -767,16 +896,16 @@ function getCachedLoc(){
   memLoc = null;
   return null;
 }
-// 失敗時 reject 一個 I18N 的 key，讓選地點頁顯示對應說明
+// 失敗時 reject 一個 I18N 的 key，選地點頁會用一行字說明
 function locate(){
   return new Promise((resolve, reject) => {
-    if(!navigator.geolocation) return reject('geoUnsupported');
+    if(!navigator.geolocation) return reject('geoFailNote');
     let settled = false;
     // 定位提示如果沒人回應，瀏覽器不會自己逾時，所以自己計時
     const dog = setTimeout(() => {
       if(settled) return;
       settled = true;
-      reject('geoFailed');
+      reject('geoFailNote');
     }, GEO_WATCHDOG_MS);
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -790,73 +919,194 @@ function locate(){
       err => {
         if(settled) return;
         settled = true; clearTimeout(dog);
-        const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-        reject(err.code === 1 ? (ios ? 'geoDeniedIos' : 'geoDenied') : 'geoFailed');
+        reject(err.code === 1 ? 'geoOffNote' : 'geoFailNote');
       },
       {timeout:10000, maximumAge:60000}
     );
   });
 }
 
-/* ============ 手動選地點 ============ */
+/* ============ 手動選地點：打字搜尋，熱門地點輔助 ============ */
+let mapSearch = {token:0, q:'', state:'idle', results:[]}; // 到地圖搜尋的狀態
 function defaultRegion(){
+  const mine = manualPlace && REGIONS.find(r => r.areas.some(x => x[2] === manualPlace.lat && x[3] === manualPlace.lng));
+  if(mine) return mine.id; // 選過內建地點就先開那一區
   let tz = '';
   try{ tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; }catch(e){}
   if(/Macau/i.test(tz)) return 'mo';
   if(/Taipei/i.test(tz)) return 'tw';
   return 'hk';
 }
+function norm(x){ return String(x).toLowerCase().replace(/臺/g, '台').replace(/[\s／/,，、]+/g, ''); }
+function localMatches(q){
+  const n = norm(q);
+  if(!n) return [];
+  const out = [];
+  REGIONS.forEach(r => r.areas.forEach(a => {
+    const zh = norm(a[0]), en = norm(a[1]);
+    if(!zh.includes(n) && !en.includes(n)) return;
+    // 排序：目前選的地區優先，再來是開頭就符合的
+    const rank = (r.id === regionId ? 0 : 2) + ((zh.startsWith(n) || en.startsWith(n)) ? 0 : 1);
+    out.push({rank, region:r, place:{zh:a[0], en:a[1], lat:a[2], lng:a[3]}});
+  }));
+  return out.sort((a, b) => a.rank - b.rank).slice(0, 6);
+}
+function suggRow(icon, name, sub, onPick, isAction){
+  const row = document.createElement('button');
+  row.className = 'sugg-row' + (isAction ? ' action' : '');
+  const pin = document.createElement('span'); pin.className = 's-pin'; pin.textContent = icon; pin.setAttribute('aria-hidden', 'true');
+  const main = document.createElement('span'); main.className = 's-main';
+  const n = document.createElement('div'); n.className = 's-name'; n.textContent = name;
+  main.appendChild(n);
+  if(sub){ const x = document.createElement('div'); x.className = 's-sub'; x.textContent = sub; main.appendChild(x); }
+  row.append(pin, main);
+  row.addEventListener('click', onPick);
+  return row;
+}
+function suggNote(text){
+  const d = document.createElement('div'); d.className = 'sugg-note'; d.textContent = text;
+  return d;
+}
 function renderPlacePicker(){
-  if(!regionId){
-    // 已經選過地點就先開那一區，否則依時區猜
-    const mine = manualPlace && REGIONS.find(r => r.areas.some(x => x[2] === manualPlace.lat && x[3] === manualPlace.lng));
-    regionId = mine ? mine.id : defaultRegion();
-  }
-  const rc = $('region-chips'), ac = $('area-chips');
-  rc.textContent = ''; ac.textContent = '';
+  const region = REGIONS.find(r => r.id === regionId);
+  const seg = $('region-seg');
+  seg.textContent = '';
   REGIONS.forEach(r => {
-    const chip = document.createElement('button');
-    chip.className = 'chip';
-    chip.dataset.region = r.id;
-    chip.textContent = areaName(r);
-    chip.setAttribute('aria-pressed', String(r.id === regionId));
-    rc.appendChild(chip);
+    const b = document.createElement('button');
+    b.dataset.region = r.id;
+    b.textContent = areaName(r);
+    b.setAttribute('aria-pressed', String(r.id === regionId));
+    seg.appendChild(b);
   });
-  REGIONS.find(r => r.id === regionId).areas.forEach(([zh, en, lat, lng], i) => {
+
+  const q = $('place-input').value.trim();
+  $('place-clear').hidden = !q;
+  const sugg = $('place-sugg');
+  sugg.textContent = '';
+  sugg.hidden = !q;
+  $('place-popular').hidden = !!q;
+
+  if(q){
+    // 打字時：先列內建清單符合的，最後一列可以到地圖搜尋
+    localMatches(q).forEach(m => sugg.appendChild(
+      suggRow('📍', areaName(m.place), areaName(m.region), () => pickPlace(m.place))));
+    const ms = mapSearch.q === q ? mapSearch : null;
+    if(ms && ms.state === 'loading') sugg.appendChild(suggNote(t('searchingMap')));
+    else if(ms && ms.state === 'done'){
+      if(!ms.results.length) sugg.appendChild(suggNote(t('noMatch', areaName(region))));
+      ms.results.forEach(x => sugg.appendChild(suggRow('🗺️', x.name, x.sub, () => pickPlace({zh:x.name, en:x.name, lat:x.lat, lng:x.lng}))));
+    }
+    else if(ms && ms.state === 'error') sugg.appendChild(suggNote(t('searchFail')));
+    else sugg.appendChild(suggRow('🔎', t('searchMap', q), t('searchMapSub', areaName(region)), () => searchMap(q), true));
+    return;
+  }
+  // 沒打字時：顯示這一區的熱門地點
+  const chips = $('pop-chips');
+  chips.textContent = '';
+  region.pop.forEach(name => {
+    const a = region.areas.find(x => x[0] === name);
+    if(!a) return;
     const chip = document.createElement('button');
     chip.className = 'chip';
-    chip.dataset.area = i;
-    chip.textContent = lang === 'en' ? en : zh;
-    const on = manualPlace && manualPlace.lat === lat && manualPlace.lng === lng;
-    chip.setAttribute('aria-pressed', String(!!on));
-    ac.appendChild(chip);
+    chip.textContent = lang === 'en' ? a[1] : a[0];
+    chip.setAttribute('aria-pressed', String(!!manualPlace && manualPlace.lat === a[2] && manualPlace.lng === a[3]));
+    chip.addEventListener('click', () => pickPlace({zh:a[0], en:a[1], lat:a[2], lng:a[3]}));
+    chips.appendChild(chip);
   });
 }
-function openPlacePicker(msgKey, thenGo){
+// 內建清單沒有時，用 OpenStreetMap 的 Nominatim 找。它不允許邊打邊查，所以只在使用者按下搜尋時才查一次
+async function searchMap(q){
+  const region = REGIONS.find(r => r.id === regionId);
+  const token = ++mapSearch.token;
+  mapSearch = {token, q, state:'loading', results:[]};
+  renderPlacePicker();
+  try{
+    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&bounded=1'
+      + '&viewbox=' + region.vb + '&accept-language=' + (lang === 'zh' ? 'zh-TW' : 'en') + '&q=' + encodeURIComponent(q);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    let list;
+    try{
+      const res = await fetch(url, {signal:ctrl.signal});
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      list = await res.json();
+    }finally{ clearTimeout(timer); }
+    if(token !== mapSearch.token) return; // 期間又搜了別的
+    const seen = new Set(), results = [];
+    (Array.isArray(list) ? list : []).forEach(x => {
+      const lat = Number(x.lat), lng = Number(x.lon);
+      const parts = String(x.display_name || '').split(',').map(p => p.trim()).filter(Boolean);
+      const name = x.name || parts[0];
+      if(!name || !isFinite(lat) || !isFinite(lng)) return;
+      const key = name + '|' + lat.toFixed(3) + '|' + lng.toFixed(3); // 同一個地方常會回傳好幾筆
+      if(seen.has(key)) return;
+      seen.add(key);
+      results.push({name, sub:parts.slice(1, 4).join(lang === 'zh' ? '・' : ', '), lat:+lat.toFixed(5), lng:+lng.toFixed(5)});
+    });
+    mapSearch = {token, q, state:'done', results};
+  }catch(e){
+    if(token !== mapSearch.token) return;
+    mapSearch = {token, q, state:'error', results:[]};
+  }
+  renderPlacePicker();
+}
+function pickPlace(place){
+  manualPlace = place;
+  store.set('todayeat_place', manualPlace);
+  renderPrefs();
+  if(goAfterPick) go(); else showStep('start');
+}
+function openPlacePicker(noteKey, thenGo){
   cancelRun();
   goAfterPick = !!thenGo;
-  $('place-msg').hidden = !msgKey;
-  if(msgKey) $('place-msg').textContent = t(msgKey);
+  regionId = defaultRegion();
+  $('place-note').hidden = !noteKey;
+  if(noteKey) $('place-note-text').textContent = t(noteKey);
+  $('place-input').value = '';
+  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]};
   renderPlacePicker();
   showStep('place');
 }
 $('btn-change-loc').addEventListener('click', () => { clearError(); openPlacePicker(null, false); });
-$('region-chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if(!chip) return;
-  regionId = chip.dataset.region;
+$('region-seg').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b) return;
+  regionId = b.dataset.region;
+  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]}; // 換地區後之前的地圖搜尋結果不適用
   renderPlacePicker();
 });
-$('area-chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if(!chip) return;
-  const [zh, en, lat, lng] = REGIONS.find(r => r.id === regionId).areas[Number(chip.dataset.area)];
-  manualPlace = {zh, en, lat, lng};
-  store.set('todayeat_place', manualPlace);
-  renderPrefs();
-  if(goAfterPick) go(); else showStep('start');
+$('place-input').addEventListener('input', renderPlacePicker);
+$('place-input').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  e.preventDefault();
+  const q = $('place-input').value.trim();
+  if(!q) return;
+  const hit = localMatches(q)[0];
+  if(hit) pickPlace(hit.place); else searchMap(q); // Enter：有符合的就選第一個，沒有就到地圖找
 });
+$('place-clear').addEventListener('click', () => {
+  $('place-input').value = '';
+  renderPlacePicker();
+  $('place-input').focus();
+});
+
+/* ============ 定位說明視窗 ============ */
+function openLocInfo(){
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  $('loc-modal-now').textContent = manualPlace ? t('locNowManual', areaName(manualPlace)) : t('locNowGps');
+  $('loc-modal-help').textContent = t(ios ? 'locHelpIos' : 'locHelp');
+  $('btn-use-gps').textContent = manualPlace ? t('useGps') : t('retryGps');
+  $('loc-modal').hidden = false;
+  $('btn-modal-close').focus();
+}
+function closeLocInfo(){ $('loc-modal').hidden = true; }
+$('btn-loc-info').addEventListener('click', openLocInfo);
+$('btn-how-enable').addEventListener('click', openLocInfo);
+$('btn-modal-close').addEventListener('click', closeLocInfo);
+$('loc-modal').addEventListener('click', e => { if(e.target === $('loc-modal')) closeLocInfo(); }); // 點背景關閉
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLocInfo(); });
 $('btn-use-gps').addEventListener('click', () => {
+  closeLocInfo();
   manualPlace = null;
   store.del('todayeat_place');
   memLoc = null; store.del('todayeat_loc'); // 重新問一次定位
