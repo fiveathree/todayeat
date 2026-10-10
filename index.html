@@ -614,7 +614,7 @@ const I18N = {
     ph_hk:'例如：灣仔軒尼詩道 100 號', ph_mo:'例如：氹仔官也街', ph_tw:'例如：台北市信義路五段 7 號', popular:'熱門地點（點一下幫你填）', clear:'清除', confirm:'確定',
     exactHint:'按「確定」就用這裡，也可以繼續輸入詳細地址。', pickOne:'找到幾個地點，請選一個：', searchingMap:'搜尋中…',
     nickLabel:'幫這個地點取個簡稱', nickPh:'例如：公司附近', nickHome:'家附近', nickOffice:'公司附近',
-    saveUse:'儲存並使用', retype:'← 重新輸入', addrFallback:n => `找不到這麼詳細的地址，先用「${n}」附近。`,
+    saveUse:'儲存並使用', retype:'← 重新輸入', addrFallback:n => `找不到這麼詳細的地址，先用「${n}」附近。`, addrApprox:n => `找不到門牌，先定位在「${n}」。`,
     noMatch:r => `在${r}找不到這個地點，換個寫法或切換地區試試。`, searchFail:'地圖搜尋暫時無法使用，請先從熱門地點選。',
     geoOffNote:'定位沒有開啟，先選一個地點吧。', geoFailNote:'取不到定位，先選一個地點吧。', howEnable:'怎麼開啟定位？',
     locInfoTitle:'關於定位', locInfoAria:'定位說明', close:'關閉',
@@ -661,7 +661,7 @@ const I18N = {
     ph_hk:'e.g. 100 Hennessy Road, Wan Chai', ph_mo:'e.g. Rua do Cunha, Taipa', ph_tw:'e.g. Xinyi Road Section 5, Taipei', popular:'Popular places (tap to fill in)', clear:'Clear', confirm:'Confirm',
     exactHint:'Tap “Confirm” to use this, or keep typing a full address.', pickOne:'Found a few places. Pick one:', searchingMap:'Searching…',
     nickLabel:'Give this place a short name', nickPh:'e.g. Near the office', nickHome:'Near home', nickOffice:'Near the office',
-    saveUse:'Save and use', retype:'← Type again', addrFallback:n => `Couldn\u2019t find that exact address, so we\u2019ll use “${n}”.`,
+    saveUse:'Save and use', retype:'← Type again', addrFallback:n => `Couldn\u2019t find that exact address, so we\u2019ll use “${n}”.`, addrApprox:n => `Couldn\u2019t find the street number, so we\u2019ll use “${n}”.`,
     noMatch:r => `Couldn\u2019t find that in ${r}. Try another spelling or switch region.`, searchFail:'Map search isn\u2019t available right now. Please pick a popular place.',
     geoOffNote:'Location is off, so pick a place instead.', geoFailNote:'Couldn\u2019t get your location, so pick a place instead.', howEnable:'How do I turn it on?',
     locInfoTitle:'About location', locInfoAria:'About location', close:'Close',
@@ -1296,19 +1296,22 @@ async function confirmPlace(){
   const token = ++mapSearch.token;
   mapSearch = {token, q, state:'loading', results:[]};
   renderAddPlace();
-  let results = [];
+  let results = [], approx = false;
   try{
     for(let i = 0; i < tries.length && !results.length; i++){
       if(i) await new Promise(r => setTimeout(r, 1100));
       results = await nominatim(tries[i], region);
       if(token !== mapSearch.token) return; // 期間改了輸入
+      approx = i > 0; // 不是用完整地址找到的，位置只是大概
     }
+    // 同一條路常被拆成好幾段回傳，名字一樣又在附近的只留一筆
+    results = results.filter((x, i) => !results.slice(0, i).some(y => y.name === x.name && haversineM(x.lat, x.lng, y.lat, y.lng) < 2000));
   }catch(e){
     if(token !== mapSearch.token) return;
     if(!base){ mapSearch = {token, q, state:'error', results:[]}; return renderAddPlace(); }
   }
   mapSearch = {token, q, state:'done', results};
-  if(results.length === 1) return openNamePlace(results[0], null);
+  if(results.length === 1) return openNamePlace(results[0], approx ? t('addrApprox', results[0].name) : null);
   if(!results.length && base) return openNamePlace(
     {name:lang === 'en' ? base.en : base.zh, sub:areaName(base.region), lat:base.lat, lng:base.lng},
     t('addrFallback', lang === 'en' ? base.en : base.zh));
