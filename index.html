@@ -660,7 +660,8 @@ const I18N = {
     fNote:'菜式是看店家在地圖上的分類和店名，沒有分類的店不會出現。辣度和價位沒有實際資料，是依菜式和店名推測的，僅供參考。',
     noFilterMatch:'附近沒有符合「更多選項」條件的餐廳，放寬條件再試試。',
     noVeg:'附近找不到標明素食的餐廳，試試關掉「只要素食」。', noOpen:'附近找不到目前有營業的餐廳。',
-    noteSome:(n, k) => `附近 ${n} 間符合，這一輪隨機抽 ${k} 間\n每次再轉都會換一批`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
+    noteSome:(n, k) => `附近 ${n} 間符合，隨機抽出 ${k} 強`,
+    noteLeft:(left, k) => `${k} 強還剩 ${left} 間\n全部都不要的話，會再抽一批新的`, noteLeftAll:left => `還剩 ${left} 間`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
     noteWiden:(a, b) => `⚠️ ${a} 分鐘內沒有，已放寬到 ${b} 分鐘內`,
     fewNote:min => `距離只設了 ${min} 分鐘，所以選擇很少。`, fewWiden:min => `改成 ${min} 分鐘再找`,
     cutTitle:n => `${n} 間餐廳大亂鬥`, cutR1:'海　選', cutR2:'複　賽', cutR3:'決　選', cutLeft:'間還在場上', cutDone:k => `🏆 ${k} 強出爐！`, skip:'跳過',
@@ -709,7 +710,8 @@ const I18N = {
     fNote:'Cuisine comes from each place\u2019s map category and name; places with no category are left out. There is no real data for spiciness or price, so those are guessed from cuisine and name.',
     noFilterMatch:'Nothing nearby matches your “More options”. Try loosening them.',
     noVeg:'No restaurants marked vegetarian nearby. Try turning off “Vegetarian only”.', noOpen:'No restaurants open nearby right now.',
-    noteSome:(n, k) => `${n} places match nearby. This round: ${k} picked at random\nEvery re-spin draws a new set`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
+    noteSome:(n, k) => `${n} places match nearby, ${k} finalists picked at random`,
+    noteLeft:(left, k) => `${left} of the final ${k} left\nReject them all and a new set is drawn`, noteLeftAll:left => left === 1 ? '1 place left' : `${left} places left`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
     noteWiden:(a, b) => `⚠️ Nothing within ${a} min, so widened to ${b} min`,
     fewNote:min => `Your walking distance is only ${min} min, so there are few choices.`, fewWiden:min => `Search within ${min} min instead`,
     cutTitle:n => `${n} restaurants enter the ring`, cutR1:'ROUND 1', cutR2:'SEMI-FINAL', cutR3:'FINAL CUT', cutLeft:'still standing', cutDone:k => `🏆 The final ${k}!`, skip:'Skip',
@@ -909,6 +911,7 @@ let wheel = [];           // 放上輪盤的那幾間
 let rejected = new Set(); // 這次已經說不想吃的
 let rotation = 0, spinning = false, spinToken = 0, current = null;
 let lastEligible = [];    // 這一輪符合條件的全部餐廳（輪盤只放其中幾間）
+let batchSize = 0;        // 這一批剛抽出來時有幾間
 let memLoc = null;
 let run = 0, runCtrl = null, loadClock = null; // 用來取消進行中的搜尋
 let regionId = 'hk', goAfterPick = false;
@@ -1580,8 +1583,11 @@ async function go(){
 function startWheel(){
   rejected.clear();
   if(!buildWheel()) return showError(t(activeFilterCount() ? 'noFilterMatch' : prefs.veg ? 'noVeg' : 'noOpen'));
+  presentNewBatch();
+}
+// 新抽出一批時：真的有被篩掉的才演淘汰賽。同一批裡「再轉」不會重播
+function presentNewBatch(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // 只有第一次、而且真的有被篩掉的才演；「再轉」不重播，免得每次都要等
   if(lastEligible.length > wheel.length && !reduce) playCut(lastEligible).then(ok => { if(ok) showWheelAndSpin(); });
   else showWheelAndSpin();
 }
@@ -1667,6 +1673,15 @@ function eligible(dist, skipRejected, skipRecent){
     !(skipRejected && rejected.has(p.id)) &&
     !recent.has(p.id));
 }
+// 輪盤上方那行字：剛抽出來時說明從幾間抽出幾強；拒絕過之後改說還剩幾間
+function renderWheelNote(){
+  let note;
+  if(wheel.length < batchSize) note = lastEligible.length > batchSize ? t('noteLeft', wheel.length, batchSize) : t('noteLeftAll', wheel.length);
+  else note = lastEligible.length > batchSize ? t('noteSome', lastEligible.length, batchSize) : t('noteAll', lastEligible.length);
+  if(poolRadius > walkRadius(prefs.min)) note += '\n' + t('noteWiden', prefs.min, Math.round(poolRadius / WALK_M_PER_MIN));
+  $('wheel-note').textContent = note;
+}
+// 抽一批新的上輪盤（最多 WHEEL_MAX 間）。同一批裡拒絕掉的只是從輪盤拿走，不會重抽
 function buildWheel(){
   // 逐步放寬：先套用全部條件 → 不管「這次不想吃」→ 連「這兩天吃過」也不管
   for(const [skipRejected, skipRecent] of [[true,true],[false,true],[false,false]]){
@@ -1675,9 +1690,8 @@ function buildWheel(){
     if(!skipRejected) rejected.clear();
     wheel = shuffle(list).slice(0, WHEEL_MAX);
     lastEligible = list;
-    let note = list.length > wheel.length ? t('noteSome', list.length, wheel.length) : t('noteAll', list.length);
-    if(poolRadius > walkRadius(prefs.min)) note += '\n' + t('noteWiden', prefs.min, Math.round(poolRadius / WALK_M_PER_MIN));
-    $('wheel-note').textContent = note;
+    batchSize = wheel.length;
+    renderWheelNote();
     // 距離設得很近、選擇又很少時，提醒可以拉遠（常見情況：拉桿停在 1 分鐘）
     const few = list.length < 3 && prefs.min < DEFAULT_MIN && poolRadius <= walkRadius(prefs.min);
     $('few-note').hidden = !few;
@@ -1817,9 +1831,19 @@ $('btn-navigate').addEventListener('click', () => {
   $('toast').textContent = t('saved', AVOID_REPEAT_DAYS);
 });
 $('btn-reject').addEventListener('click', () => {
-  if(current) rejected.add(current.id);
+  if(current){
+    rejected.add(current.id);
+    wheel = wheel.filter(p => p.id !== current.id); // 留在這一批裡，只把這間拿掉
+  }
+  if(wheel.length){
+    renderWheelNote();
+    $('few-note').hidden = true;
+    drawWheel();
+    return showWheelAndSpin();
+  }
+  // 這一批全部都不要了：再抽一批新的（已經拒絕過的不會再出現，除非全部都拒絕過）
   if(!buildWheel()) return showError(t('noMore'));
-  showWheelAndSpin();
+  presentNewBatch();
 });
 
 /* ============ 紀錄 ============ */
