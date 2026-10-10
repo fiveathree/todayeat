@@ -229,6 +229,17 @@
   .modal-card p{font-size:14px; line-height:1.75; margin-bottom:12px;}
   .modal-card p:last-of-type{margin-bottom:18px;}
   @keyframes fade-in{from{opacity:0;} to{opacity:1;}}
+  /* 淘汰賽動畫：很多間餐廳篩到剩 10 強 */
+  .cut-title{text-align:center; font-size:15px; font-weight:700; margin-bottom:2px;}
+  .cut-round{text-align:center; font-size:12.5px; font-weight:700; letter-spacing:0.12em; color:var(--plum); min-height:18px;}
+  .cut-num{text-align:center; font-family:'ZCOOL KuaiLe',sans-serif; font-size:76px; line-height:1.05; color:var(--tomato-deep); font-variant-numeric:tabular-nums;}
+  .cut-num.done{animation:cut-pop 0.5s ease;}
+  .cut-left{text-align:center; font-size:13px; color:var(--muted); margin-bottom:12px;}
+  .cut-chips{display:flex; flex-wrap:wrap; justify-content:center; align-content:flex-start; gap:6px; height:204px; overflow:hidden; margin-bottom:10px;}
+  .cut-chip{font-size:12px; line-height:1; padding:6px 9px; border-radius:100px; background:var(--line); color:var(--ink); white-space:nowrap; transition:opacity 0.25s ease, transform 0.25s ease, background 0.25s ease, color 0.25s ease;}
+  .cut-chip.out{opacity:0.16; text-decoration:line-through; transform:scale(0.88);}
+  .cut-chip.win{background:var(--tomato); color:#fff; font-weight:700; transform:scale(1.07);}
+  @keyframes cut-pop{0%{transform:scale(1);} 40%{transform:scale(1.25);} 100%{transform:scale(1);}}
   .wheel-note{text-align:center; font-size:13.5px; margin-bottom:10px; line-height:1.6; white-space:pre-line;}
   .wheel-stage{position:relative; width:280px; height:280px; margin:8px auto 22px;}
   .pointer{
@@ -295,6 +306,8 @@
     .prefs{margin-top:10px; padding-top:10px;}
     .walk-icons{height:68px; margin-bottom:6px;}
     .wheel-stage{transform:scale(0.84); margin:-14px auto 0;}
+    .cut-num{font-size:60px;}
+    .cut-chips{height:168px;}
     #few-note{margin-bottom:0; padding:6px 10px;}
     .result-name{font-size:25px;}
     .result-map{height:60px; margin:8px 0;}
@@ -405,6 +418,16 @@
     </div>
   </section>
 
+  <!-- 淘汰賽：超過 10 間時，先演一段篩到剩 10 強 -->
+  <section class="step" id="step-cut" aria-live="polite">
+    <div class="cut-title" id="cut-title"></div>
+    <div class="cut-round" id="cut-round"></div>
+    <div class="cut-num" id="cut-num"></div>
+    <div class="cut-left" id="cut-left"></div>
+    <div class="cut-chips" id="cut-chips" aria-hidden="true"></div>
+    <div class="link-row" style="margin-top:0;"><button class="link" id="btn-cut-skip" data-i18n="skip"></button></div>
+  </section>
+
   <!-- 輪盤 -->
   <section class="step" id="step-wheel">
     <div class="wheel-note" id="wheel-note"></div>
@@ -494,6 +517,8 @@ const AVOID_REPEAT_DAYS = 2;               // 吃過之後幾天內不再抽到
 const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位保留 30 分鐘
 const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單保留 7 天
 const WALK_M_PER_MIN    = 75;
+const CUT_MS            = 2000;            // 淘汰賽動畫多長（毫秒）
+const CUT_CHIPS         = 22;              // 動畫裡最多顯示幾個店名（矮螢幕會再少一點）
 const MAX_SAVED_PLACES  = 6;               // 最多記住幾個自訂地點
 // 拉桿下方的卡通圖示：[分鐘, 種類]。拉桿拉到哪一段就亮哪一個
 const WALK_ICONS = [[1,'dance'],[7,'walk'],[13,'tired'],[20,'cane']];
@@ -638,6 +663,7 @@ const I18N = {
     noteSome:(n, k) => `附近 ${n} 間符合，這一輪隨機抽 ${k} 間\n每次再轉都會換一批`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
     noteWiden:(a, b) => `⚠️ ${a} 分鐘內沒有，已放寬到 ${b} 分鐘內`,
     fewNote:min => `距離只設了 ${min} 分鐘，所以選擇很少。`, fewWiden:min => `改成 ${min} 分鐘再找`,
+    cutTitle:n => `${n} 間餐廳大亂鬥`, cutR1:'海　選', cutR2:'複　賽', cutR3:'決　選', cutLeft:'間還在場上', cutDone:k => `🏆 ${k} 強出爐！`, skip:'跳過',
     spin:'🎯 轉！', resultLabel:'命運告訴你，這餐吃：', takeMe:'🚶 就吃這間，帶我去', reject:'🎲 不想吃這間，再轉',
     call:n => `📞 打電話問問（${n}）`, reviews:'⭐ 看 Google 評價和照片',
     walk:min => `步行約 ${min} 分鐘`, fromPlace:(n, d) => `距${n} ${d}`,
@@ -686,6 +712,7 @@ const I18N = {
     noteSome:(n, k) => `${n} places match nearby. This round: ${k} picked at random\nEvery re-spin draws a new set`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
     noteWiden:(a, b) => `⚠️ Nothing within ${a} min, so widened to ${b} min`,
     fewNote:min => `Your walking distance is only ${min} min, so there are few choices.`, fewWiden:min => `Search within ${min} min instead`,
+    cutTitle:n => `${n} restaurants enter the ring`, cutR1:'ROUND 1', cutR2:'SEMI-FINAL', cutR3:'FINAL CUT', cutLeft:'still standing', cutDone:k => `🏆 The final ${k}!`, skip:'Skip',
     spin:'🎯 Spin!', resultLabel:'Fate says you’re eating at:', takeMe:'🚶 Let’s go, take me there', reject:'🎲 Not this one, spin again',
     call:n => `📞 Call to check (${n})`, reviews:'⭐ Google reviews & photos',
     walk:min => `about ${min} min walk`, fromPlace:(n, d) => `${d} from ${n}`,
@@ -881,6 +908,7 @@ let poolRadius = 500;     // pool 涵蓋的範圍（公尺）
 let wheel = [];           // 放上輪盤的那幾間
 let rejected = new Set(); // 這次已經說不想吃的
 let rotation = 0, spinning = false, spinToken = 0, current = null;
+let lastEligible = [];    // 這一輪符合條件的全部餐廳（輪盤只放其中幾間）
 let memLoc = null;
 let run = 0, runCtrl = null, loadClock = null; // 用來取消進行中的搜尋
 let regionId = 'hk', goAfterPick = false;
@@ -922,7 +950,7 @@ $('lang-toggle').addEventListener('click', e => {
 });
 
 /* ============ 畫面切換 ============ */
-const STEPS = ['start','loading','place','wheel','result','history'];
+const STEPS = ['start','loading','place','cut','wheel','result','history'];
 function showStep(name){
   if(name !== 'loading') stopLoadingClock();
   STEPS.forEach(s => $('step-'+s).classList.toggle('active', s === name));
@@ -1552,7 +1580,69 @@ async function go(){
 function startWheel(){
   rejected.clear();
   if(!buildWheel()) return showError(t(activeFilterCount() ? 'noFilterMatch' : prefs.veg ? 'noVeg' : 'noOpen'));
-  showWheelAndSpin();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 只有第一次、而且真的有被篩掉的才演；「再轉」不重播，免得每次都要等
+  if(lastEligible.length > wheel.length && !reduce) playCut(lastEligible).then(ok => { if(ok) showWheelAndSpin(); });
+  else showWheelAndSpin();
+}
+
+/* ============ 淘汰賽動畫 ============
+   純粹是演出：輪盤上的 10 間早就隨機抽好了，這裡只是把「從很多間篩到剩 10 強」演出來。 */
+function playCut(list){
+  return new Promise(resolve => {
+    const token = spinToken, total = list.length, keep = wheel.length;
+    const finalIds = new Set(wheel.map(p => p.id));
+    const maxChips = window.innerHeight < 620 ? CUT_CHIPS - 6 : CUT_CHIPS;
+    const extras = shuffle(list.filter(p => !finalIds.has(p.id))).slice(0, Math.max(4, maxChips - keep));
+    const wrap = $('cut-chips');
+    wrap.textContent = '';
+    const losers = [], winners = [];
+    shuffle(wheel.concat(extras)).forEach(p => {
+      const chip = document.createElement('span');
+      chip.className = 'cut-chip';
+      const chars = Array.from(placeName(p));
+      chip.textContent = chars.length > 8 ? chars.slice(0, 8).join('') + '…' : chars.join('');
+      (finalIds.has(p.id) ? winners : losers).push(chip);
+      wrap.appendChild(chip);
+    });
+    $('cut-title').textContent = t('cutTitle', total);
+    $('cut-left').textContent = t('cutLeft');
+    $('cut-num').classList.remove('done');
+    $('cut-num').textContent = total;
+    showStep('cut');
+
+    let done = false, raf = 0;
+    const end = ok => {
+      if(done) return;
+      done = true;
+      cancelAnimationFrame(raf);
+      resolve(ok && token === spinToken); // 中途按了首頁就不要再跳去輪盤
+    };
+    const reveal = () => {
+      losers.forEach(c => c.classList.add('out'));
+      winners.forEach(c => c.classList.add('win'));
+      $('cut-round').textContent = '';
+      $('cut-num').textContent = keep;
+      $('cut-num').classList.add('done');
+      $('cut-title').textContent = t('cutDone', keep);
+      setTimeout(() => end(true), 750);
+    };
+    const t0 = performance.now();
+    const frame = now => {
+      if(done) return;
+      if(token !== spinToken) return end(false);
+      const k = Math.min(1, (now - t0) / CUT_MS);
+      const e = 1 - Math.pow(1 - k, 3); // 一開始淘汰得快，越後面越慢
+      $('cut-num').textContent = Math.round(total - (total - keep) * e);
+      $('cut-round').textContent = t(k < 0.4 ? 'cutR1' : k < 0.8 ? 'cutR2' : 'cutR3');
+      const gone = Math.floor(losers.length * e);
+      for(let i = 0; i < gone; i++) losers[i].classList.add('out');
+      if(k < 1) raf = requestAnimationFrame(frame); else reveal();
+    };
+    $('btn-cut-skip').onclick = () => end(true);
+    raf = requestAnimationFrame(frame);
+    setTimeout(() => end(true), CUT_MS + 2500); // 分頁在背景時動畫會停，保底
+  });
 }
 function showWheelAndSpin(){
   showStep('wheel');
@@ -1584,6 +1674,7 @@ function buildWheel(){
     if(!list.length) continue;
     if(!skipRejected) rejected.clear();
     wheel = shuffle(list).slice(0, WHEEL_MAX);
+    lastEligible = list;
     let note = list.length > wheel.length ? t('noteSome', list.length, wheel.length) : t('noteAll', list.length);
     if(poolRadius > walkRadius(prefs.min)) note += '\n' + t('noteWiden', prefs.min, Math.round(poolRadius / WALK_M_PER_MIN));
     $('wheel-note').textContent = note;
