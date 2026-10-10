@@ -83,7 +83,8 @@
   .error-box.show{display:block;}
 
   .prefs{border-top:1px solid var(--line); margin-top:14px; padding-top:12px;}
-  .pref-row{display:flex; justify-content:space-between; align-items:center; gap:12px;}
+  .pref-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .pref-row .chip, #nick-chips .chip, #pop-chips .chip{margin:0;}
   .walk-value{text-align:center; margin:0 0 2px;}
   .walk-value b{font-family:'ZCOOL KuaiLe',sans-serif; font-weight:400; font-size:24px; color:var(--tomato-deep);}
   .walk-value span{font-size:12.5px; color:var(--muted); margin-left:6px;}
@@ -185,7 +186,7 @@
     position:absolute; right:9px; top:50%; width:32px; height:32px; margin-top:-16px; border-radius:50%;
     border:none; background:var(--line); color:var(--ink); font-size:15px; line-height:32px; padding:0; cursor:pointer;
   }
-  .sugg{border:1.5px solid var(--line); border-radius:16px; overflow-y:auto; max-height:44vh; max-height:44dvh; margin-bottom:6px; background:#fff;}
+  .sugg{border:1.5px solid var(--line); border-radius:16px; overflow-y:auto; max-height:34vh; max-height:34dvh; margin-bottom:10px; background:#fff;}
   .sugg-row{
     display:flex; align-items:center; gap:12px; width:100%; padding:12px 14px; background:#fff;
     border:none; border-top:1px solid var(--line); text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
@@ -198,18 +199,37 @@
   .sugg-row .s-sub{font-size:12px; color:var(--muted); margin-top:1px; overflow-wrap:anywhere;}
   .sugg-row.action .s-name{color:var(--plum);}
   .sugg-row.action .s-pin{background:#F3E9F4;}
-  .sugg-note{padding:14px; font-size:13.5px; color:var(--muted); text-align:center; border-top:1px solid var(--line);}
+  .sugg-note{padding:12px 14px; font-size:13.5px; color:var(--muted); text-align:center; border-top:1px solid var(--line); white-space:pre-line; line-height:1.6;}
   .sugg-note:first-child{border-top:none;}
+  .saved-row{display:flex; align-items:stretch; border-top:1px solid var(--line); background:#fff;}
+  .saved-row:first-child{border-top:none;}
+  .saved-row .s-hit{flex:1; min-width:0; display:flex; align-items:center; gap:12px; padding:11px 14px; background:none; border:none; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);}
+  .saved-row .s-hit:hover{background:var(--cream);}
+  .saved-row .s-pin{flex:none; width:32px; height:32px; border-radius:50%; background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:15px;}
+  .saved-row .s-main{flex:1; min-width:0;}
+  .saved-row .s-name{font-size:15px; font-weight:700; overflow-wrap:anywhere;}
+  .saved-row .s-sub{font-size:12px; color:var(--muted); margin-top:1px; overflow-wrap:anywhere;}
+  .saved-row .s-on{flex:none; font-size:12px; font-weight:700; color:var(--teal-deep); white-space:nowrap;}
+  .saved-row .s-del{flex:none; width:44px; border:none; border-left:1px solid var(--line); background:none; color:var(--muted); font-size:14px; cursor:pointer;}
+  .saved-row .s-del:hover{background:#FDEDEA; color:#B03A22;}
+  .found-card{border:1.5px solid var(--teal); background:#EFFAF8; border-radius:16px; padding:12px 14px; margin-bottom:12px;}
+  .found-card .s-name{font-size:16px; font-weight:700; overflow-wrap:anywhere;}
+  .found-card .s-sub{font-size:12.5px; color:var(--muted); margin-top:2px; overflow-wrap:anywhere;}
+  .search.plain{margin:6px 0 10px;}
+  .search.plain input{padding:0 16px;}
   .pop-label{font-size:12.5px; font-weight:700; color:var(--muted); margin:2px 0 10px;}
 
   /* 彈出視窗 */
   .modal{position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(43,33,24,0.5); animation:fade-in 0.2s ease;}
   .modal-card{width:100%; max-width:380px; background:#fff; border-radius:24px; padding:26px 22px 20px; box-shadow:0 30px 70px -20px rgba(43,33,24,0.6); animation:fade-up 0.25s ease;}
+  .modal-card{max-height:calc(100vh - 40px); max-height:calc(100dvh - 40px); overflow-y:auto;}
+  .modal-card .chips{margin-bottom:12px;}
+  .modal-card .fnote{font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:14px;}
   .modal-card h2{font-size:18px; font-weight:700; margin-bottom:12px;}
   .modal-card p{font-size:14px; line-height:1.75; margin-bottom:12px;}
   .modal-card p:last-of-type{margin-bottom:18px;}
   @keyframes fade-in{from{opacity:0;} to{opacity:1;}}
-  .wheel-note{text-align:center; font-size:13.5px; margin-bottom:14px; line-height:1.6;}
+  .wheel-note{text-align:center; font-size:13.5px; margin-bottom:10px; line-height:1.6; white-space:pre-line;}
   .wheel-stage{position:relative; width:280px; height:280px; margin:8px auto 22px;}
   .pointer{
     position:absolute; top:-8px; left:50%; transform:translateX(-50%);
@@ -280,7 +300,7 @@
     .link-row{margin-top:8px;}
     .footer{margin-top:8px; padding-top:6px;}
     #history-list{max-height:36vh; max-height:36dvh;}
-    .sugg{max-height:30vh; max-height:30dvh;}
+    .sugg{max-height:24vh; max-height:24dvh;}
     .search{margin:10px 0;}
     .place-sub{margin-bottom:10px;}
   }
@@ -297,6 +317,10 @@
     <button class="pill-btn" id="btn-home" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5.5h4v5.5"/></svg>
       <span data-i18n="home"></span>
+    </button>
+    <button class="pill-btn" id="btn-history-start">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+      <span data-i18n="historyShort"></span>
     </button>
     <span></span>
     <div class="seg" id="lang-toggle" role="group" aria-label="Language / 語言">
@@ -325,7 +349,7 @@
       <div class="walk-icons" id="walk-icons"></div>
       <div class="pref-row">
         <button class="chip" id="chip-veg" aria-pressed="false" data-i18n="vegOnly"></button>
-        <button class="link" id="btn-history-start" data-i18n="history"></button>
+        <button class="chip" id="btn-more" aria-pressed="false"></button>
       </div>
     </div>
   </section>
@@ -341,18 +365,41 @@
   <!-- 選地點 -->
   <section class="step" id="step-place">
     <div class="section-title" data-i18n="placeTitle"></div>
-    <p class="place-sub" data-i18n="placeSub"></p>
     <div class="place-note" id="place-note" hidden><span id="place-note-text"></span> <button class="link" id="btn-how-enable" data-i18n="howEnable"></button></div>
-    <div class="seg seg-wide" id="region-seg" role="group"></div>
-    <div class="search">
-      <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-      <input type="search" id="place-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-      <button class="s-clear" id="place-clear" hidden>✕</button>
+
+    <!-- A：手機定位或已儲存的地點 -->
+    <div id="place-list-view">
+      <p class="place-sub" data-i18n="listSub"></p>
+      <div class="sugg" id="saved-list"></div>
+      <button class="btn btn-secondary" id="btn-add-place" data-i18n="addPlace"></button>
     </div>
-    <div class="sugg" id="place-sugg" hidden></div>
-    <div id="place-popular">
-      <div class="pop-label" data-i18n="popular"></div>
-      <div class="chips" id="pop-chips"></div>
+
+    <!-- B：輸入新地點 -->
+    <div id="place-add-view" hidden>
+      <p class="place-sub" data-i18n="placeSub"></p>
+      <div class="seg seg-wide" id="region-seg" role="group"></div>
+      <div class="search">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+        <input type="search" id="place-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+        <button class="s-clear" id="place-clear" hidden>✕</button>
+      </div>
+      <div class="sugg" id="place-sugg" hidden></div>
+      <div id="place-popular">
+        <div class="pop-label" data-i18n="popular"></div>
+        <div class="chips" id="pop-chips"></div>
+      </div>
+      <button class="btn btn-primary" id="btn-place-confirm" data-i18n="confirm"></button>
+    </div>
+
+    <!-- C：取簡稱並儲存 -->
+    <div id="place-name-view" hidden>
+      <div class="found-card"><div class="s-name" id="found-name"></div><div class="s-sub" id="found-sub"></div></div>
+      <div class="place-note" id="found-note" hidden></div>
+      <div class="pref-label" data-i18n="nickLabel"></div>
+      <div class="search plain"><input type="text" id="nick-input" maxlength="20" autocomplete="off" enterkeyhint="done"></div>
+      <div class="chips" id="nick-chips"></div>
+      <button class="btn btn-primary" id="btn-place-save" data-i18n="saveUse"></button>
+      <button class="btn btn-secondary" id="btn-place-back" data-i18n="retype"></button>
     </div>
   </section>
 
@@ -407,6 +454,17 @@
     </div>
   </div>
 
+  <!-- 更多選項 -->
+  <div class="modal" id="more-modal" hidden role="dialog" aria-modal="true" aria-labelledby="more-modal-title">
+    <div class="modal-card">
+      <h2 id="more-modal-title" data-i18n="moreTitle"></h2>
+      <div id="more-body"></div>
+      <div class="fnote" data-i18n="fNote"></div>
+      <button class="btn btn-primary" id="btn-more-done" data-i18n="done"></button>
+      <button class="btn btn-secondary" id="btn-more-clear" data-i18n="fClear"></button>
+    </div>
+  </div>
+
   <div class="footer">
     <span data-i18n="footData"></span> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>
   </div>
@@ -432,6 +490,7 @@ const AVOID_REPEAT_DAYS = 2;               // 吃過之後幾天內不再抽到
 const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位保留 30 分鐘
 const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單保留 7 天
 const WALK_M_PER_MIN    = 75;
+const MAX_SAVED_PLACES  = 6;               // 最多記住幾個自訂地點
 // 拉桿下方的卡通圖示：[分鐘, 種類]。拉桿拉到哪一段就亮哪一個
 const WALK_ICONS = [[1,'dance'],[7,'walk'],[13,'tired'],[20,'cane']];
 const WALK_SVG = {
@@ -541,7 +600,7 @@ const I18N = {
     desc:'吃飯時間不用想，按一下，輪盤幫你挑一間附近的餐廳。',
     title:'今日吃甚麼', subtitle:'吃飯時間不用想，按一下就有答案',
     home:'首頁', go:'🎯 幫我選這餐吃什麼', changePlace:'更改地點',
-    whereGps:'📍 使用手機定位', whereManual:n => `📍 ${n} 附近`,
+    whereGps:'📍 目前位置附近', historyShort:'紀錄',
     distLabel:'🚶 最遠願意走多遠？', walkMin:min => `約 ${min} 分鐘`, walkDist:d => `${d}內`, minShort:min => `${min} 分鐘`,
     walkAria:(min, d) => `最遠走 ${min} 分鐘，大約 ${d}`,
     m:n => `${n} 公尺`, km:n => `${n} 公里`,
@@ -549,9 +608,13 @@ const I18N = {
     cancel:'取消', locating:'正在確認你的位置…', locatingSub:'請在瀏覽器跳出的視窗按「允許」',
     searching:'正在找附近的餐廳…', searchingSub:'通常幾秒就好', slow:'地圖伺服器有點慢，再等一下…',
     stillWaiting:(s, max) => `還在等（${s} 秒）… 最多等 ${max} 秒`,
-    placeTitle:'你在哪裡？', placeSub:'輸入地區、車站或地標，之後都用這裡找餐廳。',
-    searchPh:'例如：旺角、官也街、台北車站', popular:'熱門地點', clear:'清除',
-    searchMap:q => `在地圖上搜尋「${q}」`, searchMapSub:r => `內建清單沒有的地點，到${r}地圖找`, searchingMap:'搜尋中…',
+    placeTitle:'你在哪裡？', listSub:'選一個地點，或新增常用的地點（最多 6 個）。',
+    gpsName:'目前位置附近', gpsSub:'用手機定位', inUse:'使用中', del:'刪除', addPlace:'＋ 新增地點',
+    placeSub:'選地區，再輸入地址、車站或地標。寫得越詳細越準。',
+    ph_hk:'例如：灣仔軒尼詩道 100 號', ph_mo:'例如：氹仔官也街', ph_tw:'例如：台北市信義路五段 7 號', popular:'熱門地點（點一下幫你填）', clear:'清除', confirm:'確定',
+    exactHint:'按「確定」就用這裡，也可以繼續輸入詳細地址。', pickOne:'找到幾個地點，請選一個：', searchingMap:'搜尋中…',
+    nickLabel:'幫這個地點取個簡稱', nickPh:'例如：公司附近', nickHome:'家附近', nickOffice:'公司附近',
+    saveUse:'儲存並使用', retype:'← 重新輸入', addrFallback:n => `找不到這麼詳細的地址，先用「${n}」附近。`,
     noMatch:r => `在${r}找不到這個地點，換個寫法或切換地區試試。`, searchFail:'地圖搜尋暫時無法使用，請先從熱門地點選。',
     geoOffNote:'定位沒有開啟，先選一個地點吧。', geoFailNote:'取不到定位，先選一個地點吧。', howEnable:'怎麼開啟定位？',
     locInfoTitle:'關於定位', locInfoAria:'定位說明', close:'關閉',
@@ -562,8 +625,13 @@ const I18N = {
     useGps:'📍 用手機定位', retryGps:'📍 重新定位',
     serverDown:'地圖伺服器目前沒有回應（它們是免費的公共服務，有時很忙）。請稍後再按一次。',
     noData:d => `${d}內找不到餐廳資料，這一區的地圖資料可能還不齊全。試試換一個地點。`,
+    more:'⚙️ 更多選項', moreCount:n => `⚙️ 更多選項（${n}）`, moreTitle:'更多選項', done:'完成', fClear:'清除條件', fAny:'都可以',
+    fSpicy:'🌶️ 辣度', fSpicyYes:'想吃辣', fSpicyNo:'不要辣', fPrice:'💰 價位', fP1:'$ 平價小吃', fP2:'$$ 一般', fP3:'$$$ 高級',
+    fCuisine:'🍽️ 菜式（可多選）', cg_chinese:'中式', cg_japanese:'日式', cg_korean:'韓式', cg_western:'西式', cg_sea:'東南亞・印度', cg_hotpot:'火鍋', cg_noodle:'麵食', cg_fast:'速食',
+    fNote:'菜式是看店家在地圖上的分類和店名，沒有分類的店不會出現。辣度和價位沒有實際資料，是依菜式和店名推測的，僅供參考。',
+    noFilterMatch:'附近沒有符合「更多選項」條件的餐廳，放寬條件再試試。',
     noVeg:'附近找不到標明素食的餐廳，試試關掉「只要素食」。', noOpen:'附近找不到目前有營業的餐廳。',
-    noteSome:(n, k) => `附近有 ${n} 間符合，隨機抽 ${k} 間上輪盤`, noteAll:n => `附近有 ${n} 間符合，全部上輪盤`,
+    noteSome:(n, k) => `附近 ${n} 間符合，這一輪隨機抽 ${k} 間\n每次再轉都會換一批`, noteAll:n => `附近 ${n} 間符合，全部上輪盤`,
     noteWiden:(a, b) => `（${a}內沒有，擴大到 ${b}）`,
     spin:'🎯 轉！', resultLabel:'命運告訴你，這餐吃：', takeMe:'🚶 就吃這間，帶我去', reject:'🎲 不想吃這間，再轉',
     call:n => `📞 打電話問問（${n}）`, reviews:'⭐ 看 Google 評價和照片',
@@ -579,7 +647,7 @@ const I18N = {
     desc:'Can’t decide what to eat? One tap and the wheel picks a restaurant near you.',
     title:'What to Eat Today', subtitle:'No thinking needed. One tap, one answer.',
     home:'Home', go:'🎯 Pick my meal', changePlace:'Change',
-    whereGps:'📍 Using your phone’s location', whereManual:n => `📍 Near ${n}`,
+    whereGps:'📍 Near where I am now', historyShort:'History',
     distLabel:'🚶 How far will you walk?', walkMin:min => `About ${min} min`, walkDist:d => `within ${d}`, minShort:min => `${min} min`,
     walkAria:(min, d) => `Walk up to ${min} minutes, about ${d}`,
     m:n => `${n} m`, km:n => `${n} km`,
@@ -587,9 +655,13 @@ const I18N = {
     cancel:'Cancel', locating:'Finding where you are…', locatingSub:'Tap “Allow” when your browser asks',
     searching:'Looking for restaurants nearby…', searchingSub:'Usually takes a few seconds', slow:'The map server is a bit slow, hang on…',
     stillWaiting:(s, max) => `Still waiting (${s}s)… up to ${max}s`,
-    placeTitle:'Where are you?', placeSub:'Type a district, station or landmark. We\u2019ll look for restaurants around it from now on.',
-    searchPh:'e.g. Mong Kok, Taipa, Taipei Main Station', popular:'Popular places', clear:'Clear',
-    searchMap:q => `Search the map for “${q}”`, searchMapSub:r => `For places not in the built-in list, look in ${r}`, searchingMap:'Searching…',
+    placeTitle:'Where are you?', listSub:'Pick a place, or add ones you use often (up to 6).',
+    gpsName:'Near where I am now', gpsSub:'Uses your phone\u2019s location', inUse:'In use', del:'Delete', addPlace:'＋ Add a place',
+    placeSub:'Pick a region, then type an address, station or landmark. More detail is more accurate.',
+    ph_hk:'e.g. 100 Hennessy Road, Wan Chai', ph_mo:'e.g. Rua do Cunha, Taipa', ph_tw:'e.g. Xinyi Road Section 5, Taipei', popular:'Popular places (tap to fill in)', clear:'Clear', confirm:'Confirm',
+    exactHint:'Tap “Confirm” to use this, or keep typing a full address.', pickOne:'Found a few places. Pick one:', searchingMap:'Searching…',
+    nickLabel:'Give this place a short name', nickPh:'e.g. Near the office', nickHome:'Near home', nickOffice:'Near the office',
+    saveUse:'Save and use', retype:'← Type again', addrFallback:n => `Couldn\u2019t find that exact address, so we\u2019ll use “${n}”.`,
     noMatch:r => `Couldn\u2019t find that in ${r}. Try another spelling or switch region.`, searchFail:'Map search isn\u2019t available right now. Please pick a popular place.',
     geoOffNote:'Location is off, so pick a place instead.', geoFailNote:'Couldn\u2019t get your location, so pick a place instead.', howEnable:'How do I turn it on?',
     locInfoTitle:'About location', locInfoAria:'About location', close:'Close',
@@ -600,8 +672,13 @@ const I18N = {
     useGps:'📍 Use my phone\u2019s location', retryGps:'📍 Locate me again',
     serverDown:'The map servers aren’t responding right now (they are free public services and sometimes busy). Please try again in a moment.',
     noData:d => `No restaurant data within ${d}. This area may not be well mapped yet. Try another place.`,
+    more:'⚙️ More options', moreCount:n => `⚙️ More options (${n})`, moreTitle:'More options', done:'Done', fClear:'Clear all', fAny:'Any',
+    fSpicy:'🌶️ Spicy', fSpicyYes:'Spicy please', fSpicyNo:'Not spicy', fPrice:'💰 Price', fP1:'$ Cheap eats', fP2:'$$ Mid-range', fP3:'$$$ Upscale',
+    fCuisine:'🍽️ Cuisine (pick any)', cg_chinese:'Chinese', cg_japanese:'Japanese', cg_korean:'Korean', cg_western:'Western', cg_sea:'SE Asian / Indian', cg_hotpot:'Hot pot', cg_noodle:'Noodles', cg_fast:'Fast food',
+    fNote:'Cuisine comes from each place\u2019s map category and name; places with no category are left out. There is no real data for spiciness or price, so those are guessed from cuisine and name.',
+    noFilterMatch:'Nothing nearby matches your “More options”. Try loosening them.',
     noVeg:'No restaurants marked vegetarian nearby. Try turning off “Vegetarian only”.', noOpen:'No restaurants open nearby right now.',
-    noteSome:(n, k) => `${n} places match nearby, ${k} picked at random for the wheel`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
+    noteSome:(n, k) => `${n} places match nearby. This round: ${k} picked at random\nEvery re-spin draws a new set`, noteAll:n => n === 1 ? '1 place matches nearby' : `${n} places match nearby, all on the wheel`,
     noteWiden:(a, b) => ` (none within ${a}, widened to ${b})`,
     spin:'🎯 Spin!', resultLabel:'Fate says you’re eating at:', takeMe:'🚶 Let’s go, take me there', reject:'🎲 Not this one, spin again',
     call:n => `📞 Call to check (${n})`, reviews:'⭐ Google reviews & photos',
@@ -684,10 +761,46 @@ function haversineM(lat1,lng1,lat2,lng2){
 
 function cuisineKeys(tags){
   const raw = (tags.cuisine || '').toLowerCase().split(/[;,]/).map(x => x.trim()).filter(Boolean);
-  const keys = [...new Set(raw)].slice(0,2);
+  const keys = [...new Set(raw)].slice(0,4);
   if(keys.length) return keys;
   if(tags.amenity === 'fast_food' || tags.amenity === 'food_court') return [tags.amenity];
   return [];
+}
+
+/* 「更多選項」用的分類。OSM 只有菜式分類（而且不是每間都有），所以再看店名補強；
+   辣度和價位完全沒有資料，只能依菜式和店名推測。 */
+const CUISINE_GROUPS = {
+  chinese:  {keys:['chinese','cantonese','taiwanese','sichuan','hunan','shanghai','dim_sum','dumpling','dumplings','beef_noodle','porridge','congee','hotpot','hot_pot'],
+             name:/茶餐廳|冰室|燒臘|酒樓|粥|點心|小籠|餃|牛肉麵|滷|便當|熱炒|川菜|湘菜|粵菜|飲茶|雲吞|車仔麵|魯肉|滷肉/},
+  japanese: {keys:['japanese','sushi','ramen','udon','soba','tempura','yakitori','izakaya','teppanyaki','donburi','yakiniku','tonkatsu'],
+             name:/壽司|拉麵|丼|居酒屋|日式|日本|烏龍麵|燒肉|天婦羅|とんかつ|ラーメン|うどん|sushi|ramen|izakaya/i},
+  korean:   {keys:['korean'], name:/韓式|韓國|部隊鍋|korean|kimchi|bibimbap/i},
+  western:  {keys:['western','italian','pizza','pasta','burger','american','french','steak_house','steak','spanish','german','greek','mediterranean','british','fish_and_chips','mexican','sandwich','european'],
+             name:/pizza|burger|pasta|steak|bistro|grill|披薩|薄餅|漢堡|義大利|意大利|牛排|扒房|西餐|法式|法國/i},
+  sea:      {keys:['thai','vietnamese','indian','malaysian','singaporean','indonesian','filipino','nepalese','curry'],
+             name:/泰式|泰國|越南|河粉|印度|咖哩|咖喱|星馬|南洋|馬來|thai|pho|curry|viet/i},
+  hotpot:   {keys:['hotpot','hot_pot','shabu'], name:/火鍋|鍋物|涮涮|麻辣燙|打邊爐|shabu|hot ?pot/i},
+  noodle:   {keys:['noodle','noodles','ramen','beef_noodle','udon','soba'], name:/麵|米線|河粉|粉麵|noodle|ramen/i},
+  fast:     {keys:['fast_food','burger','fried_chicken','chicken'],
+             name:/麥當勞|肯德基|摩斯|漢堡王|吉野家|大家樂|大快活|頂呱呱|丹丹|McDonald|KFC|Subway|Burger King|MOS/i}
+};
+const SPICY_KEYS = ['sichuan','hunan','thai','korean','indian','mexican','curry'];
+const SPICY_NAME = /麻辣|辣|川|湘|泡菜|咖哩|咖喱|泰式|泰國|韓式|韓國|酸菜魚|spicy|sichuan|szechuan|kimchi|curry/i;
+const PRICE_HIGH_KEYS = ['fine_dining','french','steak_house','kaiseki','teppanyaki'];
+const PRICE_HIGH_NAME = /omakase|鐵板燒|懷石|牛排|扒房|steak|fine dining|法式|法國|割烹|鮨/i;
+const PRICE_LOW_KEYS = ['noodle','noodles','beef_noodle','bento','porridge','congee','breakfast','dumpling','dumplings','sandwich','fried_chicken'];
+const PRICE_LOW_NAME = /麵|粥|便當|小吃|小食|豆漿|早餐|飯糰|滷味|鹹酥雞|茶餐廳|冰室|粉麵|快餐|速食/;
+function classify(p){
+  const keys = p.cuisine || [], name = (p.name || '') + ' ' + (p.nameEn || '');
+  const groups = Object.keys(CUISINE_GROUPS).filter(g => {
+    const def = CUISINE_GROUPS[g];
+    return keys.some(k => def.keys.includes(k)) || def.name.test(name) || (g === 'fast' && p.kind === 'fast_food');
+  });
+  const spicy = keys.some(k => SPICY_KEYS.includes(k)) || SPICY_NAME.test(name);
+  let price = 2; // 1 = 平價小吃、2 = 一般、3 = 高級
+  if(keys.some(k => PRICE_HIGH_KEYS.includes(k)) || PRICE_HIGH_NAME.test(name)) price = 3;
+  else if(p.kind === 'fast_food' || p.kind === 'food_court' || groups.includes('fast') || keys.some(k => PRICE_LOW_KEYS.includes(k)) || PRICE_LOW_NAME.test(name)) price = 1;
+  return {groups, spicy, price};
 }
 
 function toPlace(el, loc, now){
@@ -704,6 +817,7 @@ function toPlace(el, loc, now){
     lat, lng,
     distanceM: haversineM(loc.lat, loc.lng, lat, lng),
     cuisine: cuisineKeys(tags), // OSM 的原始分類，顯示時再依語言轉換
+    kind: tags.amenity || '',
     veg: yes(tags['diet:vegetarian']) || yes(tags['diet:vegan']) || /vegetarian|vegan/.test(cuisineRaw),
     open: isOpenAt(tags.opening_hours, now),
     hours: tags.opening_hours || '',
@@ -729,7 +843,7 @@ const store = {
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* 無痕模式等情況寫不進去，直接略過 */ } },
   del(k){ try{ localStorage.removeItem(k); }catch(e){} }
 };
-store.del('todayeat_places'); // 舊版格式的清單，不再使用
+store.del('todayeat_places'); store.del('todayeat_places_v2'); // 舊版格式的清單，不再使用
 
 /* ============ 狀態 ============ */
 let lang = store.get('todayeat_lang', null) || ((navigator.language || 'zh').toLowerCase().startsWith('zh') ? 'zh' : 'en');
@@ -738,9 +852,24 @@ let prefs = (saved => {
   let min = Number(saved.min);
   if(!min && saved.dist) min = Math.round(saved.dist / WALK_M_PER_MIN); // 舊版存的是公尺
   if(!(min >= 1 && min <= WALK_MIN_MAX)) min = DEFAULT_MIN;
-  return {min:Math.round(min), veg:!!saved.veg};
+  return {
+    min:Math.round(min), veg:!!saved.veg,
+    spicy:['yes','no'].includes(saved.spicy) ? saved.spicy : 'any',
+    price:['1','2','3'].includes(String(saved.price)) ? String(saved.price) : 'any',
+    cuisines:Array.isArray(saved.cuisines) ? saved.cuisines.filter(g => CUISINE_GROUPS[g]) : []
+  };
 })(store.get('todayeat_prefs', {}));
-let manualPlace = store.get('todayeat_place', null); // {zh,en,lat,lng}；null = 用手機定位
+let savedPlaces = store.get('todayeat_saved', []);       // [{id,label,name,lat,lng}] 使用者存的地點
+if(!Array.isArray(savedPlaces)) savedPlaces = [];
+let activePlaceId = store.get('todayeat_active', 'gps'); // 'gps' = 用手機定位
+(old => { // 舊版只能記一個地點，轉成新格式
+  if(!old || old.lat == null) return;
+  const id = 'p' + Date.now();
+  savedPlaces.unshift({id, label:old.zh, name:old.zh, lat:old.lat, lng:old.lng});
+  activePlaceId = id;
+  store.set('todayeat_saved', savedPlaces); store.set('todayeat_active', activePlaceId); store.del('todayeat_place');
+})(store.get('todayeat_place', null));
+function activePlace(){ return savedPlaces.find(p => p.id === activePlaceId) || null; }
 let pool = [];            // 這次找到的全部餐廳
 let poolRadius = 500;     // pool 涵蓋的範圍（公尺）
 let wheel = [];           // 放上輪盤的那幾間
@@ -761,7 +890,7 @@ function fmtDist(m){ return m >= 1000 ? t('km', +(m/1000).toFixed(1)) : t('m', m
 function placeName(p){ return (lang === 'en' && p.nameEn) ? p.nameEn : p.name; }
 function areaName(a){ return lang === 'en' ? a.en : a.zh; }
 function cuisineText(p){
-  return (p.cuisine || []).map(k => {
+  return (p.cuisine || []).slice(0, 2).map(k => {
     const plain = k.replace(/_/g, ' ');
     return lang === 'zh' ? (CUISINE_ZH[k] || plain) : plain.charAt(0).toUpperCase() + plain.slice(1);
   }).join(lang === 'zh' ? '・' : ', ');
@@ -773,7 +902,6 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('#lang-toggle button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
   $('btn-loc-info').setAttribute('aria-label', t('locInfoAria'));
-  $('place-input').placeholder = t('searchPh');
   $('place-clear').setAttribute('aria-label', t('clear'));
   $('history-hint').textContent = t('historyHint', AVOID_REPEAT_DAYS);
   renderPrefs();
@@ -794,6 +922,7 @@ function showStep(name){
   STEPS.forEach(s => $('step-'+s).classList.toggle('active', s === name));
   $('btn-home').hidden = name === 'start';   // 首頁以外都有「首頁」
   $('lang-toggle').hidden = name !== 'start'; // 語言只在首頁切換
+  $('btn-history-start').hidden = name !== 'start';
   window.scrollTo(0,0);
 }
 function goHome(){
@@ -870,7 +999,11 @@ function renderWalk(){
 function renderPrefs(){
   renderWalk();
   $('chip-veg').setAttribute('aria-pressed', String(prefs.veg));
-  $('where-label').textContent = manualPlace ? t('whereManual', areaName(manualPlace)) : t('whereGps');
+  const place = activePlace();
+  $('where-label').textContent = place ? placeIcon(place.label) + ' ' + place.label : t('whereGps');
+  const n = activeFilterCount();
+  $('btn-more').textContent = n ? t('moreCount', n) : t('more');
+  $('btn-more').setAttribute('aria-pressed', String(n > 0));
 }
 function setWalk(min, save){
   prefs.min = Math.min(WALK_MIN_MAX, Math.max(1, Math.round(min)));
@@ -926,34 +1059,126 @@ function locate(){
   });
 }
 
-/* ============ 手動選地點：打字搜尋，熱門地點輔助 ============ */
-let mapSearch = {token:0, q:'', state:'idle', results:[]}; // 到地圖搜尋的狀態
+/* ============ 地點：手機定位，或自己儲存的幾個地點 ============ */
+let mapSearch = {token:0, q:'', state:'idle', results:[]}; // 按「確定」後到地圖搜尋的狀態
+let pendingPlace = null;                                    // 找到、等著取簡稱的地點
+function saveSavedPlaces(){
+  store.set('todayeat_saved', savedPlaces);
+  store.set('todayeat_active', activePlaceId);
+}
+function placeIcon(label){
+  if(/家|home/i.test(label)) return '🏠';
+  if(/公司|辦公|office|work/i.test(label)) return '🏢';
+  return '📍';
+}
+function shortName(n){ const c = Array.from(String(n)); return c.length > 12 ? c.slice(0, 12).join('') + '…' : String(n); }
+function setPlaceView(v){
+  $('place-list-view').hidden = v !== 'list';
+  $('place-add-view').hidden = v !== 'add';
+  $('place-name-view').hidden = v !== 'name';
+}
+
+/* --- A：已儲存的地點 --- */
+function savedRow(icon, name, sub, active, onPick, onDelete){
+  const row = document.createElement('div');
+  row.className = 'saved-row';
+  const hit = document.createElement('button'); hit.className = 's-hit';
+  const pin = document.createElement('span'); pin.className = 's-pin'; pin.textContent = icon; pin.setAttribute('aria-hidden', 'true');
+  const main = document.createElement('span'); main.className = 's-main';
+  const n = document.createElement('div'); n.className = 's-name'; n.textContent = name;
+  const s = document.createElement('div'); s.className = 's-sub'; s.textContent = sub;
+  main.append(n, s);
+  hit.append(pin, main);
+  if(active){ const on = document.createElement('span'); on.className = 's-on'; on.textContent = '✓ ' + t('inUse'); hit.appendChild(on); }
+  hit.addEventListener('click', onPick);
+  row.appendChild(hit);
+  if(onDelete){
+    const del = document.createElement('button'); del.className = 's-del'; del.textContent = '✕';
+    del.setAttribute('aria-label', t('del') + ' ' + name);
+    del.addEventListener('click', onDelete);
+    row.appendChild(del);
+  }
+  return row;
+}
+function renderSavedList(){
+  const wrap = $('saved-list');
+  wrap.textContent = '';
+  wrap.appendChild(savedRow('📍', t('gpsName'), t('gpsSub'), activePlaceId === 'gps', () => usePlace('gps')));
+  savedPlaces.forEach(p => wrap.appendChild(savedRow(placeIcon(p.label), p.label, p.label === p.name ? '' : p.name, p.id === activePlaceId,
+    () => usePlace(p.id),
+    () => {
+      savedPlaces = savedPlaces.filter(x => x.id !== p.id);
+      if(activePlaceId === p.id) activePlaceId = 'gps';
+      saveSavedPlaces(); renderPrefs(); renderSavedList();
+    })));
+  $('btn-add-place').hidden = savedPlaces.length >= MAX_SAVED_PLACES;
+}
+function usePlace(id){
+  activePlaceId = id;
+  if(id === 'gps'){ memLoc = null; store.del('todayeat_loc'); } // 換回定位時重新問一次位置
+  saveSavedPlaces();
+  renderPrefs();
+  if(goAfterPick) go(); else showStep('start');
+}
+function openPlacePicker(noteKey, thenGo){
+  cancelRun();
+  goAfterPick = !!thenGo;
+  $('place-note').hidden = !noteKey;
+  if(noteKey) $('place-note-text').textContent = t(noteKey);
+  renderSavedList();
+  if(noteKey && !savedPlaces.length) openAddPlace(); // 定位不能用又沒存過地點：直接請他輸入
+  else setPlaceView('list');
+  showStep('place');
+}
+$('btn-change-loc').addEventListener('click', () => { clearError(); openPlacePicker(null, false); });
+$('btn-add-place').addEventListener('click', openAddPlace);
+
+/* --- B：輸入新地點（熱門地點只是幫忙填字） --- */
 function defaultRegion(){
-  const mine = manualPlace && REGIONS.find(r => r.areas.some(x => x[2] === manualPlace.lat && x[3] === manualPlace.lng));
-  if(mine) return mine.id; // 選過內建地點就先開那一區
   let tz = '';
   try{ tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; }catch(e){}
   if(/Macau/i.test(tz)) return 'mo';
   if(/Taipei/i.test(tz)) return 'tw';
   return 'hk';
 }
-function norm(x){ return String(x).toLowerCase().replace(/臺/g, '台').replace(/[\s／/,，、]+/g, ''); }
-function localMatches(q){
-  const n = norm(q);
-  if(!n) return [];
-  const out = [];
-  REGIONS.forEach(r => r.areas.forEach(a => {
-    const zh = norm(a[0]), en = norm(a[1]);
-    if(!zh.includes(n) && !en.includes(n)) return;
-    // 排序：目前選的地區優先，再來是開頭就符合的
-    const rank = (r.id === regionId ? 0 : 2) + ((zh.startsWith(n) || en.startsWith(n)) ? 0 : 1);
-    out.push({rank, region:r, place:{zh:a[0], en:a[1], lat:a[2], lng:a[3]}});
+function norm(x){ return String(x).toLowerCase().replace(/臺/g, '台').replace(/[\s／/,，、.]+/g, ''); }
+function regionNames(r){ return r.id === 'tw' ? [r.zh, '臺灣', r.en] : [r.zh, r.en]; }
+// 把開頭或結尾的「香港」「Taiwan」之類拿掉，剩下的才是要找的地方
+function stripRegion(q){
+  let s = String(q).trim();
+  REGIONS.forEach(r => regionNames(r).forEach(n => {
+    const e = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    s = s.replace(new RegExp('^' + e + '[\\s,，]*', 'i'), '').replace(new RegExp('[\\s,，]*' + e + '$', 'i'), '');
   }));
-  return out.sort((a, b) => a.rank - b.rank).slice(0, 6);
+  return s.trim();
 }
-function suggRow(icon, name, sub, onPick, isAction){
+function allAreas(){
+  const out = [];
+  REGIONS.forEach(r => r.areas.forEach(a => out.push({region:r, zh:a[0], en:a[1], lat:a[2], lng:a[3]})));
+  return out;
+}
+function findExact(rest){
+  const n = norm(rest);
+  const hits = allAreas().filter(a => norm(a.zh) === n || norm(a.en) === n);
+  return hits.find(a => a.region.id === regionId) || hits[0] || null;
+}
+function localMatches(rest){
+  const n = norm(rest);
+  if(!n) return [];
+  return allAreas().filter(a => norm(a.zh).includes(n) || norm(a.en).includes(n))
+    .map(a => ({a, rank:(a.region.id === regionId ? 0 : 2) + ((norm(a.zh).startsWith(n) || norm(a.en).startsWith(n)) ? 0 : 1)}))
+    .sort((x, y) => x.rank - y.rank).slice(0, 5).map(x => x.a); // 目前選的地區優先，再來是開頭就符合的
+}
+function fillText(a){ return lang === 'en' ? `${a.en}, ${a.region.en}` : a.region.zh + a.zh; }
+function fillInput(a){
+  regionId = a.region.id;
+  $('place-input').value = fillText(a);
+  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]};
+  renderAddPlace();
+}
+function suggRow(icon, name, sub, onPick){
   const row = document.createElement('button');
-  row.className = 'sugg-row' + (isAction ? ' action' : '');
+  row.className = 'sugg-row';
   const pin = document.createElement('span'); pin.className = 's-pin'; pin.textContent = icon; pin.setAttribute('aria-hidden', 'true');
   const main = document.createElement('span'); main.className = 's-main';
   const n = document.createElement('div'); n.className = 's-name'; n.textContent = name;
@@ -967,7 +1192,7 @@ function suggNote(text){
   const d = document.createElement('div'); d.className = 'sugg-note'; d.textContent = text;
   return d;
 }
-function renderPlacePicker(){
+function renderAddPlace(){
   const region = REGIONS.find(r => r.id === regionId);
   const seg = $('region-seg');
   seg.textContent = '';
@@ -979,139 +1204,239 @@ function renderPlacePicker(){
     seg.appendChild(b);
   });
 
-  const q = $('place-input').value.trim();
+  $('place-input').placeholder = t('ph_' + regionId);
+  const q = $('place-input').value.trim(), rest = stripRegion(q);
   $('place-clear').hidden = !q;
+  $('btn-place-confirm').disabled = !q || mapSearch.state === 'loading';
   const sugg = $('place-sugg');
   sugg.textContent = '';
-  sugg.hidden = !q;
-  $('place-popular').hidden = !!q;
+  const showPopular = !rest; // 還沒打字，或只打了地區名
+  $('place-popular').hidden = !showPopular;
 
-  if(q){
-    // 打字時：先列內建清單符合的，最後一列可以到地圖搜尋
-    localMatches(q).forEach(m => sugg.appendChild(
-      suggRow('📍', areaName(m.place), areaName(m.region), () => pickPlace(m.place))));
+  if(!showPopular){
     const ms = mapSearch.q === q ? mapSearch : null;
+    const exact = findExact(rest);
     if(ms && ms.state === 'loading') sugg.appendChild(suggNote(t('searchingMap')));
-    else if(ms && ms.state === 'done'){
-      if(!ms.results.length) sugg.appendChild(suggNote(t('noMatch', areaName(region))));
-      ms.results.forEach(x => sugg.appendChild(suggRow('🗺️', x.name, x.sub, () => pickPlace({zh:x.name, en:x.name, lat:x.lat, lng:x.lng}))));
+    else if(ms && ms.state === 'done' && ms.results.length){
+      sugg.appendChild(suggNote(t('pickOne')));
+      ms.results.forEach(x => sugg.appendChild(suggRow('🗺️', x.name, x.sub, () => openNamePlace(x, null))));
     }
+    else if(ms && ms.state === 'done') sugg.appendChild(suggNote(t('noMatch', areaName(region))));
     else if(ms && ms.state === 'error') sugg.appendChild(suggNote(t('searchFail')));
-    else sugg.appendChild(suggRow('🔎', t('searchMap', q), t('searchMapSub', areaName(region)), () => searchMap(q), true));
-    return;
-  }
-  // 沒打字時：顯示這一區的熱門地點
-  const chips = $('pop-chips');
-  chips.textContent = '';
-  region.pop.forEach(name => {
-    const a = region.areas.find(x => x[0] === name);
-    if(!a) return;
-    const chip = document.createElement('button');
-    chip.className = 'chip';
-    chip.textContent = lang === 'en' ? a[1] : a[0];
-    chip.setAttribute('aria-pressed', String(!!manualPlace && manualPlace.lat === a[2] && manualPlace.lng === a[3]));
-    chip.addEventListener('click', () => pickPlace({zh:a[0], en:a[1], lat:a[2], lng:a[3]}));
-    chips.appendChild(chip);
-  });
-}
-// 內建清單沒有時，用 OpenStreetMap 的 Nominatim 找。它不允許邊打邊查，所以只在使用者按下搜尋時才查一次
-async function searchMap(q){
-  const region = REGIONS.find(r => r.id === regionId);
-  const token = ++mapSearch.token;
-  mapSearch = {token, q, state:'loading', results:[]};
-  renderPlacePicker();
-  try{
-    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&bounded=1'
-      + '&viewbox=' + region.vb + '&accept-language=' + (lang === 'zh' ? 'zh-TW' : 'en') + '&q=' + encodeURIComponent(q);
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 10000);
-    let list;
-    try{
-      const res = await fetch(url, {signal:ctrl.signal});
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-      list = await res.json();
-    }finally{ clearTimeout(timer); }
-    if(token !== mapSearch.token) return; // 期間又搜了別的
-    const seen = new Set(), results = [];
-    (Array.isArray(list) ? list : []).forEach(x => {
-      const lat = Number(x.lat), lng = Number(x.lon);
-      const parts = String(x.display_name || '').split(',').map(p => p.trim()).filter(Boolean);
-      const name = x.name || parts[0];
-      if(!name || !isFinite(lat) || !isFinite(lng)) return;
-      const key = name + '|' + lat.toFixed(3) + '|' + lng.toFixed(3); // 同一個地方常會回傳好幾筆
-      if(seen.has(key)) return;
-      seen.add(key);
-      results.push({name, sub:parts.slice(1, 4).join(lang === 'zh' ? '・' : ', '), lat:+lat.toFixed(5), lng:+lng.toFixed(5)});
+    else if(exact) sugg.appendChild(suggNote('📍 ' + (lang === 'en' ? `${exact.en}, ${exact.region.en}` : `${exact.region.zh}・${exact.zh}`) + '\n' + t('exactHint')));
+    else localMatches(rest).forEach(a => sugg.appendChild(suggRow('📍', lang === 'en' ? a.en : a.zh, areaName(a.region), () => fillInput(a))));
+  } else {
+    const chips = $('pop-chips');
+    chips.textContent = '';
+    region.pop.forEach(name => {
+      const a = allAreas().find(x => x.region.id === region.id && x.zh === name);
+      if(!a) return;
+      const chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.textContent = lang === 'en' ? a.en : a.zh;
+      chip.addEventListener('click', () => fillInput(a)); // 只幫忙填字，不直接跳走
+      chips.appendChild(chip);
     });
-    mapSearch = {token, q, state:'done', results};
-  }catch(e){
-    if(token !== mapSearch.token) return;
-    mapSearch = {token, q, state:'error', results:[]};
   }
-  renderPlacePicker();
+  sugg.hidden = !sugg.childNodes.length;
 }
-function pickPlace(place){
-  manualPlace = place;
-  store.set('todayeat_place', manualPlace);
-  renderPrefs();
-  if(goAfterPick) go(); else showStep('start');
-}
-function openPlacePicker(noteKey, thenGo){
-  cancelRun();
-  goAfterPick = !!thenGo;
+function openAddPlace(){
   regionId = defaultRegion();
-  $('place-note').hidden = !noteKey;
-  if(noteKey) $('place-note-text').textContent = t(noteKey);
   $('place-input').value = '';
   mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]};
-  renderPlacePicker();
-  showStep('place');
+  renderAddPlace();
+  setPlaceView('add');
 }
-$('btn-change-loc').addEventListener('click', () => { clearError(); openPlacePicker(null, false); });
+// OpenStreetMap 的 Nominatim。它不允許邊打邊查、每秒最多一次，所以只在按「確定」時才查
+async function nominatim(text, region){
+  const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&bounded=1'
+    + '&viewbox=' + region.vb + '&accept-language=' + (lang === 'zh' ? 'zh-TW' : 'en') + '&q=' + encodeURIComponent(text);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  let list;
+  try{
+    const res = await fetch(url, {signal:ctrl.signal});
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    list = await res.json();
+  }finally{ clearTimeout(timer); }
+  const seen = new Set(), results = [];
+  (Array.isArray(list) ? list : []).forEach(x => {
+    const lat = Number(x.lat), lng = Number(x.lon);
+    const parts = String(x.display_name || '').split(',').map(p => p.trim()).filter(Boolean);
+    // 門牌地址沒有名稱，用「路名 + 門牌」當名稱
+    const name = x.name || (parts.length > 1 ? (lang === 'zh' ? parts[1] + parts[0] : parts[0] + ' ' + parts[1]) : parts[0]);
+    if(!name || !isFinite(lat) || !isFinite(lng)) return;
+    const key = name + '|' + lat.toFixed(3) + '|' + lng.toFixed(3); // 同一個地方常會回傳好幾筆
+    if(seen.has(key)) return;
+    seen.add(key);
+    results.push({name, sub:parts.slice(1, 4).join(lang === 'zh' ? '・' : ', '), lat:+lat.toFixed(5), lng:+lng.toFixed(5)});
+  });
+  return results;
+}
+async function confirmPlace(){
+  const q = $('place-input').value.trim();
+  if(!q || mapSearch.state === 'loading') return;
+  const rest = stripRegion(q);
+  if(!rest) return; // 只有地區名，還不夠
+  const exact = findExact(rest);
+  if(exact) return openNamePlace({name:lang === 'en' ? exact.en : exact.zh, sub:areaName(exact.region), lat:exact.lat, lng:exact.lng}, null);
+
+  // 找「灣仔軒尼詩道100號」這類地址：整句找不到就拿掉前面的區名、再拿掉門牌，最後退回區名本身
+  const compact = rest.replace(/\s+/g, '');
+  const base = allAreas().filter(a => norm(compact).startsWith(norm(a.zh)) || norm(rest).startsWith(norm(a.en)))
+    .sort((x, y) => y.zh.length - x.zh.length)[0] || null;
+  if(base) regionId = base.region.id;
+  const region = REGIONS.find(r => r.id === regionId);
+  const tries = [rest];
+  const tail = base && norm(compact).startsWith(norm(base.zh)) ? compact.slice(base.zh.length) : rest;
+  if(tail && tail !== rest) tries.push(tail);
+  const noNumber = tail.replace(/[0-9０-９]+.*$/, '').trim();
+  if(noNumber && !tries.includes(noNumber)) tries.push(noNumber);
+
+  const token = ++mapSearch.token;
+  mapSearch = {token, q, state:'loading', results:[]};
+  renderAddPlace();
+  let results = [];
+  try{
+    for(let i = 0; i < tries.length && !results.length; i++){
+      if(i) await new Promise(r => setTimeout(r, 1100));
+      results = await nominatim(tries[i], region);
+      if(token !== mapSearch.token) return; // 期間改了輸入
+    }
+  }catch(e){
+    if(token !== mapSearch.token) return;
+    if(!base){ mapSearch = {token, q, state:'error', results:[]}; return renderAddPlace(); }
+  }
+  mapSearch = {token, q, state:'done', results};
+  if(results.length === 1) return openNamePlace(results[0], null);
+  if(!results.length && base) return openNamePlace(
+    {name:lang === 'en' ? base.en : base.zh, sub:areaName(base.region), lat:base.lat, lng:base.lng},
+    t('addrFallback', lang === 'en' ? base.en : base.zh));
+  renderAddPlace(); // 多筆讓他選，或顯示找不到
+}
 $('region-seg').addEventListener('click', e => {
   const b = e.target.closest('button');
   if(!b) return;
   regionId = b.dataset.region;
-  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]}; // 換地區後之前的地圖搜尋結果不適用
-  renderPlacePicker();
+  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]}; // 換地區後之前的搜尋結果不適用
+  renderAddPlace();
 });
-$('place-input').addEventListener('input', renderPlacePicker);
+$('place-input').addEventListener('input', renderAddPlace);
 $('place-input').addEventListener('keydown', e => {
   if(e.key !== 'Enter') return;
   e.preventDefault();
-  const q = $('place-input').value.trim();
-  if(!q) return;
-  const hit = localMatches(q)[0];
-  if(hit) pickPlace(hit.place); else searchMap(q); // Enter：有符合的就選第一個，沒有就到地圖找
+  $('place-input').blur(); // 收起手機鍵盤
+  confirmPlace();
 });
+$('btn-place-confirm').addEventListener('click', confirmPlace);
 $('place-clear').addEventListener('click', () => {
   $('place-input').value = '';
-  renderPlacePicker();
+  mapSearch = {token:mapSearch.token + 1, q:'', state:'idle', results:[]};
+  renderAddPlace();
   $('place-input').focus();
 });
+
+/* --- C：幫找到的地點取簡稱並儲存 --- */
+function openNamePlace(place, note){
+  pendingPlace = place;
+  $('found-name').textContent = place.name;
+  $('found-sub').textContent = place.sub || '';
+  $('found-note').hidden = !note;
+  $('found-note').textContent = note || '';
+  $('nick-input').value = shortName(place.name).replace(/…$/, '');
+  $('nick-input').placeholder = t('nickPh');
+  const chips = $('nick-chips');
+  chips.textContent = '';
+  [t('nickHome'), t('nickOffice')].forEach(label => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = placeIcon(label) + ' ' + label;
+    chip.addEventListener('click', () => { $('nick-input').value = label; });
+    chips.appendChild(chip);
+  });
+  setPlaceView('name');
+}
+$('btn-place-back').addEventListener('click', () => { setPlaceView('add'); renderAddPlace(); });
+$('btn-place-save').addEventListener('click', () => {
+  if(!pendingPlace) return;
+  const label = $('nick-input').value.trim() || pendingPlace.name;
+  const id = 'p' + Date.now();
+  // 同一個簡稱再存一次就是更新（例如換了公司）
+  savedPlaces = [{id, label, name:pendingPlace.name, lat:pendingPlace.lat, lng:pendingPlace.lng}]
+    .concat(savedPlaces.filter(p => p.label !== label)).slice(0, MAX_SAVED_PLACES);
+  pendingPlace = null;
+  usePlace(id);
+});
+$('nick-input').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('btn-place-save').click(); } });
 
 /* ============ 定位說明視窗 ============ */
 function openLocInfo(){
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  $('loc-modal-now').textContent = manualPlace ? t('locNowManual', areaName(manualPlace)) : t('locNowGps');
+  const place = activePlace();
+  $('loc-modal-now').textContent = place ? t('locNowManual', place.label) : t('locNowGps');
   $('loc-modal-help').textContent = t(ios ? 'locHelpIos' : 'locHelp');
-  $('btn-use-gps').textContent = manualPlace ? t('useGps') : t('retryGps');
+  $('btn-use-gps').textContent = place ? t('useGps') : t('retryGps');
   $('loc-modal').hidden = false;
   $('btn-modal-close').focus();
 }
-function closeLocInfo(){ $('loc-modal').hidden = true; }
+function closeModals(){ $('loc-modal').hidden = true; $('more-modal').hidden = true; }
 $('btn-loc-info').addEventListener('click', openLocInfo);
 $('btn-how-enable').addEventListener('click', openLocInfo);
-$('btn-modal-close').addEventListener('click', closeLocInfo);
-$('loc-modal').addEventListener('click', e => { if(e.target === $('loc-modal')) closeLocInfo(); }); // 點背景關閉
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLocInfo(); });
+$('btn-modal-close').addEventListener('click', closeModals);
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModals(); })); // 點背景關閉
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModals(); });
 $('btn-use-gps').addEventListener('click', () => {
-  closeLocInfo();
-  manualPlace = null;
-  store.del('todayeat_place');
-  memLoc = null; store.del('todayeat_loc'); // 重新問一次定位
-  renderPrefs();
-  go();
+  closeModals();
+  goAfterPick = true;
+  usePlace('gps');
+});
+
+/* ============ 更多選項：辣度、價位、菜式 ============ */
+function activeFilterCount(){ return (prefs.spicy !== 'any') + (prefs.price !== 'any') + prefs.cuisines.length; }
+function matchesFilters(p){
+  if(!activeFilterCount()) return true;
+  const c = classify(p);
+  if(prefs.spicy === 'yes' && !c.spicy) return false;
+  if(prefs.spicy === 'no' && c.spicy) return false;
+  if(prefs.price !== 'any' && c.price !== Number(prefs.price)) return false;
+  if(prefs.cuisines.length && !prefs.cuisines.some(g => c.groups.includes(g))) return false; // 沒有分類資料的店會被排除
+  return true;
+}
+function filterGroup(title, options, isOn, onPick){
+  const wrap = document.createElement('div');
+  const label = document.createElement('div'); label.className = 'pref-label'; label.textContent = title;
+  const chips = document.createElement('div'); chips.className = 'chips';
+  options.forEach(([value, text]) => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = text;
+    chip.setAttribute('aria-pressed', String(isOn(value)));
+    chip.addEventListener('click', () => { onPick(value); store.set('todayeat_prefs', prefs); renderMore(); renderPrefs(); });
+    chips.appendChild(chip);
+  });
+  wrap.append(label, chips);
+  return wrap;
+}
+function renderMore(){
+  const body = $('more-body');
+  body.textContent = '';
+  body.appendChild(filterGroup(t('fSpicy'), [['any', t('fAny')], ['yes', t('fSpicyYes')], ['no', t('fSpicyNo')]],
+    v => prefs.spicy === v, v => { prefs.spicy = v; }));
+  body.appendChild(filterGroup(t('fPrice'), [['any', t('fAny')], ['1', t('fP1')], ['2', t('fP2')], ['3', t('fP3')]],
+    v => String(prefs.price) === v, v => { prefs.price = v; }));
+  body.appendChild(filterGroup(t('fCuisine'), [['any', t('fAny')]].concat(Object.keys(CUISINE_GROUPS).map(g => [g, t('cg_' + g)])),
+    v => v === 'any' ? !prefs.cuisines.length : prefs.cuisines.includes(v),
+    v => {
+      if(v === 'any') prefs.cuisines = [];
+      else prefs.cuisines = prefs.cuisines.includes(v) ? prefs.cuisines.filter(x => x !== v) : prefs.cuisines.concat(v);
+    }));
+}
+$('btn-more').addEventListener('click', () => { renderMore(); $('more-modal').hidden = false; });
+$('btn-more-done').addEventListener('click', closeModals);
+$('btn-more-clear').addEventListener('click', () => {
+  prefs.spicy = 'any'; prefs.price = 'any'; prefs.cuisines = [];
+  store.set('todayeat_prefs', prefs);
+  renderMore(); renderPrefs();
 });
 
 /* ============ 取得餐廳（OpenStreetMap Overpass，不需要 API key） ============ */
@@ -1140,7 +1465,7 @@ async function fetchPlaces(loc, radius, signal){
 }
 
 /* 餐廳清單存在本機：同一個地方（例如公司）第二次打開不用再等網路 */
-const CACHE_KEY = 'todayeat_places_v2';
+const CACHE_KEY = 'todayeat_places_v3';
 function cacheFind(loc, radius, anyAge){
   return store.get(CACHE_KEY, []).find(c =>
     c.r >= radius &&
@@ -1182,7 +1507,7 @@ async function go(){
   runCtrl = new AbortController();
   const signal = runCtrl.signal;
   showStep('loading');
-  let loc = manualPlace || getCachedLoc();
+  let loc = activePlace() || getCachedLoc();
   if(!loc){
     setLoading(t('locating'), t('locatingSub'));
     try{ loc = await locate(); }
@@ -1209,7 +1534,7 @@ async function go(){
 }
 function startWheel(){
   rejected.clear();
-  if(!buildWheel()) return showError(t(prefs.veg ? 'noVeg' : 'noOpen'));
+  if(!buildWheel()) return showError(t(activeFilterCount() ? 'noFilterMatch' : prefs.veg ? 'noVeg' : 'noOpen'));
   showWheelAndSpin();
 }
 function showWheelAndSpin(){
@@ -1230,6 +1555,7 @@ function eligible(dist, skipRejected, skipRecent){
     p.distanceM <= dist &&
     p.open !== false &&                 // 確定已打烊才剔除；不確定的照樣列入，結果頁會提醒
     (!prefs.veg || p.veg) &&
+    matchesFilters(p) &&
     !(skipRejected && rejected.has(p.id)) &&
     !recent.has(p.id));
 }
@@ -1333,7 +1659,8 @@ function showResult(p){
   $('result-name').textContent = placeName(p);
 
   const walkMin = Math.max(1, Math.round(p.distanceM / WALK_M_PER_MIN));
-  const dist = manualPlace ? t('fromPlace', areaName(manualPlace), fmtDist(p.distanceM)) : fmtDist(p.distanceM);
+  const place = activePlace();
+  const dist = place ? t('fromPlace', shortName(place.name), fmtDist(p.distanceM)) : fmtDist(p.distanceM);
   $('result-meta').textContent = [cuisineText(p), dist, t('walk', walkMin)].filter(Boolean).join(t('sep'));
 
   $('result-status').textContent = p.open === true ? t('openNow') : t('openUnknown');
