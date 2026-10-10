@@ -83,6 +83,44 @@
   .error-box.show{display:block;}
 
   .prefs{border-top:1px solid var(--line); margin-top:24px; padding-top:20px;}
+  .walk-value{text-align:center; margin:4px 0 10px;}
+  .walk-value b{font-family:'ZCOOL KuaiLe',sans-serif; font-weight:400; font-size:24px; color:var(--tomato-deep);}
+  .walk-value span{font-size:12.5px; color:var(--muted); margin-left:6px;}
+  .walk-slider{
+    -webkit-appearance:none; appearance:none; display:block; width:100%; height:32px; margin:0;
+    background:transparent; cursor:pointer; touch-action:pan-y;
+  }
+  .walk-slider::-webkit-slider-runnable-track{
+    height:10px; border-radius:10px;
+    background:linear-gradient(to right, var(--tomato) var(--fill,30%), var(--line) var(--fill,30%));
+  }
+  .walk-slider::-moz-range-track{height:10px; border-radius:10px; background:var(--line);}
+  .walk-slider::-moz-range-progress{height:10px; border-radius:10px; background:var(--tomato);}
+  .walk-slider::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:28px; height:28px; margin-top:-9px; border-radius:50%;
+    background:#fff; border:4px solid var(--tomato); box-shadow:0 3px 8px rgba(43,33,24,0.25);
+  }
+  .walk-slider::-moz-range-thumb{
+    width:20px; height:20px; border-radius:50%;
+    background:#fff; border:4px solid var(--tomato); box-shadow:0 3px 8px rgba(43,33,24,0.25);
+  }
+  .walk-slider:focus-visible{outline:2px solid var(--plum); outline-offset:4px; border-radius:10px;}
+  /* 圖示對齊拉桿上的 1、7、13、20 分鐘；左右各留半個拉桿圓鈕的寬度 */
+  .walk-icons{position:relative; height:74px; margin:6px 14px 14px;}
+  .walk-icon{
+    position:absolute; top:0; width:56px; margin-left:-28px; padding:0;
+    background:none; border:none; cursor:pointer; font-family:inherit; text-align:center;
+    color:var(--muted); opacity:0.45; transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .walk-icon svg{display:block; width:44px; height:52px; margin:0 auto;}
+  .walk-icon small{display:block; font-size:11px; margin-top:2px; white-space:nowrap;}
+  .walk-icon[aria-pressed="true"]{opacity:1; color:var(--tomato-deep); transform:scale(1.18);}
+  .walk-icon[aria-pressed="true"] small{font-weight:700;}
+  .walk-icon[aria-pressed="true"] svg{animation:walk-bob 0.9s ease-in-out infinite;}
+  .walk-icon[data-kind="dance"][aria-pressed="true"] svg{animation:walk-dance 0.6s ease-in-out infinite;}
+  .walk-icon[data-kind="tired"][aria-pressed="true"] svg, .walk-icon[data-kind="cane"][aria-pressed="true"] svg{animation-duration:1.8s;}
+  @keyframes walk-bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-3px);}}
+  @keyframes walk-dance{0%,100%{transform:rotate(-9deg);} 50%{transform:rotate(9deg);}}
   .pref-label{font-size:13px; font-weight:700; margin-bottom:8px;}
   .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
   .chip{
@@ -161,7 +199,7 @@
   .footer a{color:inherit;}
 
   @media (prefers-reduced-motion: reduce){
-    .spinner, .step.active{animation:none;}
+    .spinner, .step.active, .walk-icon svg{animation:none !important;}
   }
 </style>
 </head>
@@ -186,7 +224,9 @@
 
     <div class="prefs">
       <div class="pref-label" data-i18n="distLabel"></div>
-      <div class="chips" id="dist-chips"></div>
+      <div class="walk-value"><b id="walk-min"></b><span id="walk-dist"></span></div>
+      <input class="walk-slider" id="walk-slider" type="range" min="1" max="20" step="1">
+      <div class="walk-icons" id="walk-icons"></div>
       <div class="chips" style="margin-bottom:0;">
         <button class="chip" id="chip-veg" aria-pressed="false" data-i18n="vegOnly"></button>
       </div>
@@ -274,13 +314,22 @@ const OVERPASS_ENDPOINTS = [
 const FETCH_TIMEOUT_MS  = 20000;           // 最多等多久
 const GEO_WATCHDOG_MS   = 15000;           // 定位提示沒人回應時，等多久就放棄
 const CACHE_REUSE_M     = 150;             // 離上次搜尋位置多近就沿用上次的清單
-const DIST_STEPS        = [100, 500, 1000, 1500]; // 公尺；100 = 約 1 分鐘，下樓就到
-const DEFAULT_DIST      = 500;
+const WALK_MIN_MAX      = 20;              // 拉桿：最遠走幾分鐘
+const DEFAULT_MIN       = 7;
+const FETCH_BUCKETS     = [150, 500, 1000, 1500]; // 向伺服器查詢用的半徑（公尺），查大一點存起來，拉桿微調時不用重查
 const WHEEL_MAX         = 10;              // 輪盤最多放幾間
 const AVOID_REPEAT_DAYS = 2;               // 吃過之後幾天內不再抽到
 const LOC_TTL_MS        = 30 * 60 * 1000;  // 定位保留 30 分鐘
 const PLACES_TTL_MS     = 7 * 86400000;    // 餐廳清單保留 7 天
 const WALK_M_PER_MIN    = 75;
+// 拉桿下方的卡通圖示：[分鐘, 種類]。拉桿拉到哪一段就亮哪一個
+const WALK_ICONS = [[1,'dance'],[7,'walk'],[13,'tired'],[20,'cane']];
+const WALK_SVG = {
+  dance:'<circle cx="24" cy="10" r="6" fill="#FFC94D"/><path d="M24 16 22 32M23 20 12 9M23 20 36 13M22 32 14 46M22 32 32 40 38 33"/><path d="M39 3v7M39 3l4 1.5M6 22v6M6 22l4 1.5" stroke-width="2"/><circle cx="37.5" cy="10.5" r="1.8" fill="currentColor" stroke="none"/><circle cx="4.5" cy="28.5" r="1.8" fill="currentColor" stroke="none"/>',
+  walk:'<circle cx="24" cy="10" r="6" fill="#FFC94D"/><path d="M24 16V33M24 21 16 29M24 21 32 28M24 33 16 47M24 33 31 47"/>',
+  tired:'<circle cx="31" cy="15" r="6" fill="#FFC94D"/><path d="M28 20 20 35M26 24 29 37M25 25 20 37M20 35 15 48M20 35 26 48"/><path d="M41 5c-1.5 2.5-2 3.5-2 4.5a2 2 0 0 0 4 0c0-1-.5-2-2-4.5zM44 15c-1 1.8-1.5 2.5-1.5 3.2a1.5 1.5 0 0 0 3 0c0-.7-.5-1.4-1.5-3.2z" fill="#5AA9E6" stroke="none"/>',
+  cane:'<circle cx="21" cy="12" r="6" fill="#FFC94D"/><path d="M21 18 19 34M20 23 32 28M19 34 14 48M19 34 24 48"/><path d="M29 27a3 3 0 0 1 6 0V48" stroke="#8A5A8C"/>'
+};
 const PALETTE = ['#FF6B4A','#2FB6A5','#8A5A8C','#F2A65A','#5AA9E6','#D9534F','#3C9D6F'];
 
 const CUISINE_ZH = {
@@ -379,7 +428,8 @@ const I18N = {
     title:'今日吃甚麼', subtitle:'吃飯時間不用想，按一下就有答案',
     home:'🏠 首頁', go:'🎯 幫我選這餐吃什麼', changePlace:'更改地點',
     whereGps:'📍 使用手機定位', whereManual:n => `📍 ${n} 附近`,
-    distLabel:'🚶 最遠願意走多遠？', distChip:(min, d) => `約 ${min} 分鐘（${d}）`,
+    distLabel:'🚶 最遠願意走多遠？', walkMin:min => `約 ${min} 分鐘`, walkDist:d => `${d}內`, minShort:min => `${min} 分鐘`,
+    walkAria:(min, d) => `最遠走 ${min} 分鐘，大約 ${d}`,
     m:n => `${n} 公尺`, km:n => `${n} 公里`,
     vegOnly:'🥬 只要素食', prefHint:'偏好會記住，下次打開直接按就好。', history:'📜 吃過的紀錄',
     cancel:'取消', locating:'正在確認你的位置…', locatingSub:'請在瀏覽器跳出的視窗按「允許」',
@@ -411,7 +461,8 @@ const I18N = {
     title:'What to Eat Today', subtitle:'No thinking needed. One tap, one answer.',
     home:'🏠 Home', go:'🎯 Pick my meal', changePlace:'Change',
     whereGps:'📍 Using your phone’s location', whereManual:n => `📍 Near ${n}`,
-    distLabel:'🚶 How far will you walk?', distChip:(min, d) => `~${min} min (${d})`,
+    distLabel:'🚶 How far will you walk?', walkMin:min => `About ${min} min`, walkDist:d => `within ${d}`, minShort:min => `${min} min`,
+    walkAria:(min, d) => `Walk up to ${min} minutes, about ${d}`,
     m:n => `${n} m`, km:n => `${n} km`,
     vegOnly:'🥬 Vegetarian only', prefHint:'Your preferences are saved. Next time, just tap.', history:'📜 Places I’ve eaten',
     cancel:'Cancel', locating:'Finding where you are…', locatingSub:'Tap “Allow” when your browser asks',
@@ -559,11 +610,15 @@ store.del('todayeat_places'); // 舊版格式的清單，不再使用
 /* ============ 狀態 ============ */
 let lang = store.get('todayeat_lang', null) || ((navigator.language || 'zh').toLowerCase().startsWith('zh') ? 'zh' : 'en');
 if(!I18N[lang]) lang = 'zh';
-let prefs = Object.assign({dist:DEFAULT_DIST, veg:false}, store.get('todayeat_prefs', {}));
-if(!DIST_STEPS.includes(prefs.dist)) prefs.dist = DEFAULT_DIST;
+let prefs = (saved => {
+  let min = Number(saved.min);
+  if(!min && saved.dist) min = Math.round(saved.dist / WALK_M_PER_MIN); // 舊版存的是公尺
+  if(!(min >= 1 && min <= WALK_MIN_MAX)) min = DEFAULT_MIN;
+  return {min:Math.round(min), veg:!!saved.veg};
+})(store.get('todayeat_prefs', {}));
 let manualPlace = store.get('todayeat_place', null); // {zh,en,lat,lng}；null = 用手機定位
 let pool = [];            // 這次找到的全部餐廳
-let poolRadius = DEFAULT_DIST; // pool 是搜尋多遠取得的
+let poolRadius = 500;     // pool 涵蓋的範圍（公尺）
 let wheel = [];           // 放上輪盤的那幾間
 let rejected = new Set(); // 這次已經說不想吃的
 let rotation = 0, spinning = false, spinToken = 0, current = null;
@@ -576,6 +631,8 @@ function t(key, ...args){
   const v = I18N[lang][key];
   return typeof v === 'function' ? v(...args) : v;
 }
+// 1 分鐘算 100 公尺（定位本身就有幾十公尺誤差），之後每分鐘 75 公尺
+function walkRadius(min){ return Math.max(100, min * WALK_M_PER_MIN); }
 function fmtDist(m){ return m >= 1000 ? t('km', +(m/1000).toFixed(1)) : t('m', m); }
 function placeName(p){ return (lang === 'en' && p.nameEn) ? p.nameEn : p.name; }
 function areaName(a){ return lang === 'en' ? a.en : a.zh; }
@@ -646,26 +703,56 @@ function cancelRun(){
 }
 
 /* ============ 偏好 ============ */
-function renderPrefs(){
-  const wrap = $('dist-chips');
+function walkKind(min){
+  // 圖示之間取中點分段：1–4 跳舞、5–10 慢走、11–16 走到累、17–20 拄拐杖
+  let kind = WALK_ICONS[0][1];
+  WALK_ICONS.forEach(([m, k], i) => { if(i && min > (WALK_ICONS[i-1][0] + m) / 2) kind = k; });
+  return kind;
+}
+function buildWalkIcons(){
+  const wrap = $('walk-icons');
   wrap.textContent = '';
-  DIST_STEPS.forEach(d => {
-    const chip = document.createElement('button');
-    chip.className = 'chip';
-    chip.dataset.dist = d;
-    chip.textContent = t('distChip', Math.round(d / WALK_M_PER_MIN), fmtDist(d));
-    chip.setAttribute('aria-pressed', String(d === prefs.dist));
-    wrap.appendChild(chip);
+  WALK_ICONS.forEach(([min, kind]) => {
+    const btn = document.createElement('button');
+    btn.className = 'walk-icon';
+    btn.dataset.kind = kind;
+    btn.dataset.min = min;
+    btn.style.left = ((min - 1) / (WALK_MIN_MAX - 1) * 100) + '%';
+    btn.innerHTML = '<svg viewBox="0 0 48 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                  + WALK_SVG[kind] + '</svg><small></small>'; // 內容是上面寫死的 SVG，不含外部資料
+    wrap.appendChild(btn);
   });
+}
+function renderWalk(){
+  const min = prefs.min, d = fmtDist(walkRadius(min));
+  const slider = $('walk-slider');
+  slider.value = min;
+  slider.style.setProperty('--fill', ((min - 1) / (WALK_MIN_MAX - 1) * 100) + '%');
+  slider.setAttribute('aria-label', t('distLabel'));
+  slider.setAttribute('aria-valuetext', t('walkAria', min, d));
+  $('walk-min').textContent = t('walkMin', min);
+  $('walk-dist').textContent = t('walkDist', d);
+  const kind = walkKind(min);
+  document.querySelectorAll('.walk-icon').forEach(btn => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.kind === kind));
+    btn.querySelector('small').textContent = t('minShort', btn.dataset.min);
+  });
+}
+function renderPrefs(){
+  renderWalk();
   $('chip-veg').setAttribute('aria-pressed', String(prefs.veg));
   $('where-label').textContent = manualPlace ? t('whereManual', areaName(manualPlace)) : t('whereGps');
 }
-$('dist-chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if(!chip) return;
-  prefs.dist = Number(chip.dataset.dist);
-  store.set('todayeat_prefs', prefs);
-  renderPrefs();
+function setWalk(min, save){
+  prefs.min = Math.min(WALK_MIN_MAX, Math.max(1, Math.round(min)));
+  if(save) store.set('todayeat_prefs', prefs);
+  renderWalk();
+}
+$('walk-slider').addEventListener('input', e => setWalk(Number(e.target.value), false));  // 拉的時候即時更新
+$('walk-slider').addEventListener('change', e => setWalk(Number(e.target.value), true));  // 放手才存
+$('walk-icons').addEventListener('click', e => {
+  const btn = e.target.closest('.walk-icon');
+  if(btn) setWalk(Number(btn.dataset.min), true);
 });
 $('chip-veg').addEventListener('click', () => {
   prefs.veg = !prefs.veg;
@@ -855,11 +942,12 @@ async function go(){
   setLoading(t('searching'), t('searchingSub'));
   startLoadingClock();
   try{
-    // 先搜尋選定的距離；完全沒有可選的才搜尋更遠
-    for(const d of DIST_STEPS.filter(x => x >= prefs.dist)){
-      const places = await getPlaces(loc, d, signal);
+    // 先看選定的距離；完全沒有可選的才逐步放遠
+    const want = walkRadius(prefs.min);
+    for(const d of [want, ...FETCH_BUCKETS.filter(b => b > want)]){
+      const places = await getPlaces(loc, FETCH_BUCKETS.find(b => b >= d), signal);
       if(my !== run) return;
-      pool = places; poolRadius = d;
+      pool = places.filter(p => p.distanceM <= d); poolRadius = d;
       if(eligible(d, false, false).length) break;
     }
   }catch(e){
@@ -903,7 +991,7 @@ function buildWheel(){
     if(!skipRejected) rejected.clear();
     wheel = shuffle(list).slice(0, WHEEL_MAX);
     let note = list.length > wheel.length ? t('noteSome', list.length, wheel.length) : t('noteAll', list.length);
-    if(poolRadius > prefs.dist) note += t('noteWiden', fmtDist(prefs.dist), fmtDist(poolRadius));
+    if(poolRadius > walkRadius(prefs.min)) note += t('noteWiden', fmtDist(walkRadius(prefs.min)), fmtDist(poolRadius));
     $('wheel-note').textContent = note;
     drawWheel();
     return true;
@@ -1086,6 +1174,7 @@ $('btn-history-clear').addEventListener('click', () => {
   if(confirm(t('clearConfirm'))){ store.set('todayeat_history', []); renderHistory(); }
 });
 
+buildWalkIcons();
 applyLang();
 showStep('start');
 </script>
